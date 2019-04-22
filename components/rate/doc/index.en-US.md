@@ -13,6 +13,14 @@ Rate component.
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzRateModule } from 'ng-zorro-antd';
+```
+
 ### nz-rate
 
 | Property | Description | type | Default |

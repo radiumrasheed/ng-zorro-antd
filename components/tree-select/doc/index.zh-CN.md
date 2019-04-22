@@ -1,7 +1,7 @@
 ---
 category: Components
 subtitle: 树选择
-type: Data Entry
+type: 数据录入
 title: TreeSelect
 ---
 
@@ -12,6 +12,14 @@ title: TreeSelect
 类似 Select 的选择控件，可选择的数据结构是一个树形结构时，可以使用 TreeSelect，例如公司层级、学科系统、分类目录等等。
 
 ## API
+
+### 单独引入此组件
+
+想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
+
+```ts
+import { NzTreeSelectModule } from 'ng-zorro-antd';
+```
 
 ### nz-tree-select
 

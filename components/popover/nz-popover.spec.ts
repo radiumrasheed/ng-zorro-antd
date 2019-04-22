@@ -3,7 +3,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { fakeAsync, inject, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { dispatchMouseEvent } from '../core/testing';
+import { dispatchMouseEvent } from 'ng-zorro-antd/core';
 import { NzIconTestModule } from '../icon/nz-icon-test.module';
 import { NzToolTipModule } from '../tooltip/nz-tooltip.module';
 import { NzPopoverDirective } from './nz-popover.directive';
@@ -15,14 +15,14 @@ describe('NzPopover', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports     : [ NzPopoverModule, NoopAnimationsModule, NzToolTipModule, NzIconTestModule ],
-      declarations: [ NzPopoverTestWrapperComponent, NzPopoverTestNewComponent ]
+      imports: [NzPopoverModule, NoopAnimationsModule, NzToolTipModule, NzIconTestModule],
+      declarations: [NzPopoverTestWrapperComponent, NzPopoverTestNewComponent]
     });
 
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([ OverlayContainer ], (oc: OverlayContainer) => {
+  beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
     overlayContainer = oc;
     overlayContainerElement = oc.getContainerElement();
   }));
@@ -143,7 +143,9 @@ describe('NzPopover', () => {
       tick();
       fixture.detectChanges();
       expect(overlayContainerElement.querySelector('.ant-popover-title')!.textContent).toContain('title-string');
-      expect(overlayContainerElement.querySelector('.ant-popover-inner-content')!.textContent).toContain('content-string');
+      expect(overlayContainerElement.querySelector('.ant-popover-inner-content')!.textContent).toContain(
+        'content-string'
+      );
 
       // Move out from the trigger element to hide it
       dispatchMouseEvent(triggerElement, 'mouseleave');
@@ -167,7 +169,9 @@ describe('NzPopover', () => {
       tick();
       fixture.detectChanges();
       expect(overlayContainerElement.querySelector('.ant-popover-title')!.textContent).toContain('title-template');
-      expect(overlayContainerElement.querySelector('.ant-popover-inner-content')!.textContent).toContain('content-template');
+      expect(overlayContainerElement.querySelector('.ant-popover-inner-content')!.textContent).toContain(
+        'content-template'
+      );
 
       // Move out from the trigger element to hide it
       dispatchMouseEvent(triggerElement, 'mouseleave');
@@ -219,9 +223,7 @@ export class NzPopoverTestNewComponent {
 
     <nz-popover>
       <button #templateTrigger nz-popover>Show</button>
-      <ng-template #nzTemplate>
-        <i nz-icon type="file"></i> <span>Show with icon</span>
-      </ng-template>
+      <ng-template #nzTemplate> <i nz-icon type="file"></i> <span>Show with icon</span> </ng-template>
     </nz-popover>
 
     <nz-popover nzTitle="FOCUS" [nzTrigger]="'focus'"><span #focusTrigger nz-popover>Show</span></nz-popover>

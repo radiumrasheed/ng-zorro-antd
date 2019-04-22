@@ -13,6 +13,14 @@ Switching Selector.
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzSwitchModule } from 'ng-zorro-antd';
+```
+
 ### nz-switch
 
 | Property | Description | Type | Default |

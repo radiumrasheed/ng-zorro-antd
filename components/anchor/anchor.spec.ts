@@ -4,7 +4,7 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { NzAnchorModule } from './nz-anchor.module';
 import { NzAnchorComponent } from './nz-anchor.component';
-import { NzScrollService } from '../core/scroll/nz-scroll.service';
+import { NzScrollService } from 'ng-zorro-antd/core';
 
 const throttleTime = 51;
 
@@ -16,8 +16,8 @@ describe('anchor', () => {
   let srv: NzScrollService;
   beforeEach(() => {
     const i = TestBed.configureTestingModule({
-        imports: [ NzAnchorModule ],
-        declarations: [ TestComponent ]
+      imports: [NzAnchorModule],
+      declarations: [TestComponent]
     });
     fixture = TestBed.createComponent(TestComponent);
     dl = fixture.debugElement;
@@ -31,14 +31,13 @@ describe('anchor', () => {
 
   describe('[default]', () => {
     it(`should scolling to target via click a link`, () => {
-      spyOn(srv, 'scrollTo').and.callFake((
-        _containerEl: Element | Window,
-        _targetTopValue: number = 0,
-        _easing?: any,
-        callback?: () => void
-      ) => {
-        if (callback) { callback(); }
-      });
+      spyOn(srv, 'scrollTo').and.callFake(
+        (_containerEl: Element | Window, _targetTopValue: number = 0, _easing?: any, callback?: () => void) => {
+          if (callback) {
+            callback();
+          }
+        }
+      );
       expect(context._scroll).not.toHaveBeenCalled();
       page.to('#何时使用');
       expect(context._scroll).toHaveBeenCalled();
@@ -160,11 +159,14 @@ describe('anchor', () => {
         expect(window.addEventListener).toHaveBeenCalled();
       });
       it('with string', () => {
+        spyOn(context, '_click');
         const el = document.querySelector('#target')!;
         spyOn(el, 'addEventListener');
         context.nzTarget = '#target';
         fixture.detectChanges();
         expect(el.addEventListener).toHaveBeenCalled();
+        page.to('#basic-target');
+        expect(context._click).toHaveBeenCalled();
       });
     });
 
@@ -223,56 +225,62 @@ describe('anchor', () => {
       return this;
     }
   }
-
 });
 
 @Component({
   template: `
-  <nz-anchor
-    [nzAffix]="nzAffix"
-    [nzBounds]="nzBounds"
-    [nzShowInkInFixed]="nzShowInkInFixed"
-    [nzOffsetTop]="nzOffsetTop"
-    [nzTarget]="nzTarget"
-    (nzClick)="_click($event)" (nzScroll)="_scroll($event)">
-    <nz-link nzHref="#何时使用" nzTitle="何时使用"></nz-link>
-    <nz-link nzHref="#basic" nzTitle="Basic demo"></nz-link>
-    <nz-link nzHref="#API-AnchorLink">
-      <ng-template #nzTemplate>
-        <span class="nzTemplate-title">tpl</span>
-      </ng-template>
-    </nz-link>
-    <nz-link nzHref="#API" nzTitle="API">
-      <nz-link nzHref="#API-Anchor" nzTitle="nz-anchor"></nz-link>
-      <nz-link nzHref="#API-AnchorLink" [nzTitle]="title">
-        <ng-template #title>
-          <span class="nzTitle-title">tpl-title</span>
+    <nz-anchor
+      [nzAffix]="nzAffix"
+      [nzBounds]="nzBounds"
+      [nzShowInkInFixed]="nzShowInkInFixed"
+      [nzOffsetTop]="nzOffsetTop"
+      [nzTarget]="nzTarget"
+      (nzClick)="_click($event)"
+      (nzScroll)="_scroll($event)"
+    >
+      <nz-link nzHref="#何时使用" nzTitle="何时使用"></nz-link>
+      <nz-link nzHref="#basic" nzTitle="Basic demo"></nz-link>
+      <nz-link nzHref="#API-AnchorLink">
+        <ng-template #nzTemplate>
+          <span class="nzTemplate-title">tpl</span>
         </ng-template>
       </nz-link>
-    </nz-link>
-    <nz-link nzHref="#invalid" nzTitle="invalid"></nz-link>
-    <nz-link nzHref="invalidLink" nzTitle="invalidLink"></nz-link>
-    <nz-link nzHref="http://www.example.com/#id" nzTitle="complete" class="mock-complete"></nz-link>
-    <nz-link nzHref="#parallel1" nzTitle="parallel1"></nz-link>
-    <nz-link nzHref="#parallel2" nzTitle="parallel2"></nz-link>
-  </nz-anchor>
-  <h2 id="何时使用"></h2>
-  <div style="height: 1000px"></div>
-  <h2 id="basic"></h2>
-  <div style="height: 100px"></div>
-  <h2 id="API"></h2>
-  <div style="height: 100px"></div>
-  <h2 id="API-Anchor"></h2>
-  <div style="height: 100px"></div>
-  <h2 id="API-AnchorLink"></h2>
-  <table>
-    <tr>
-      <td><h2 id="parallel1">parallel1</h2></td>
-      <td><h2 id="parallel2">parallel2</h2></td>
-    </tr>
-  </table>
-  <div style="height: 1000px"></div>
-  <div id="target"></div>
+      <nz-link nzHref="#API" nzTitle="API">
+        <nz-link nzHref="#API-Anchor" nzTitle="nz-anchor"></nz-link>
+        <nz-link nzHref="#API-AnchorLink" [nzTitle]="title">
+          <ng-template #title>
+            <span class="nzTitle-title">tpl-title</span>
+          </ng-template>
+        </nz-link>
+      </nz-link>
+      <nz-link nzHref="#invalid" nzTitle="invalid"></nz-link>
+      <nz-link nzHref="invalidLink" nzTitle="invalidLink"></nz-link>
+      <nz-link nzHref="http://www.example.com/#id" nzTitle="complete" class="mock-complete"></nz-link>
+      <nz-link nzHref="#parallel1" nzTitle="parallel1"></nz-link>
+      <nz-link nzHref="#parallel2" nzTitle="parallel2"></nz-link>
+      <nz-link nzHref="#basic-target" nzTitle="basic-target"></nz-link>
+    </nz-anchor>
+    <h2 id="何时使用"></h2>
+    <div style="height: 1000px"></div>
+    <h2 id="basic"></h2>
+    <div style="height: 100px"></div>
+    <h2 id="API"></h2>
+    <div style="height: 100px"></div>
+    <h2 id="API-Anchor"></h2>
+    <div style="height: 100px"></div>
+    <h2 id="API-AnchorLink"></h2>
+    <table>
+      <tr>
+        <td><h2 id="parallel1">parallel1</h2></td>
+        <td><h2 id="parallel2">parallel2</h2></td>
+      </tr>
+    </table>
+
+    <div style="height: 1000px"></div>
+    <div id="target">
+      <div style="height: 1000px"></div>
+      <h2 id="basic-target"></h2>
+    </div>
   `
 })
 export class TestComponent {

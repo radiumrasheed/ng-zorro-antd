@@ -1,7 +1,8 @@
 import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
 
 @Directive({
-  selector: '[nzClassListAdd]'
+  selector: '[nzClassListAdd]',
+  exportAs: 'nzClassListAdd'
 })
 export class NzClassListAddDirective {
   classList: string[] = [];
@@ -17,6 +18,5 @@ export class NzClassListAddDirective {
     this.classList = list;
   }
 
-  constructor(private elementRef: ElementRef, private renderer: Renderer2) {
-  }
+  constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
 }

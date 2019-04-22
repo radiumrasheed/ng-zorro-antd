@@ -1,9 +1,18 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 /** code from https://github.com/angular/material2 */
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
   AfterContentChecked,
   AfterContentInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
@@ -21,7 +30,7 @@ import {
 import { fromEvent, merge, of as observableOf, Subscription } from 'rxjs';
 import { auditTime, startWith } from 'rxjs/operators';
 
-import { InputBoolean } from '../core/util/convert';
+import { InputBoolean } from 'ng-zorro-antd/core';
 
 import { NzTabLabelDirective } from './nz-tab-label.directive';
 import { NzTabsInkBarDirective } from './nz-tabs-ink-bar.directive';
@@ -31,11 +40,12 @@ const EXAGGERATED_OVERSCROLL = 64;
 export type ScrollDirection = 'after' | 'before';
 
 @Component({
-  selector           : '[nz-tabs-nav]',
+  selector: '[nz-tabs-nav]',
+  exportAs: 'nzTabsNav',
   preserveWhitespaces: false,
-  changeDetection    : ChangeDetectionStrategy.OnPush,
-  encapsulation      : ViewEncapsulation.None,
-  templateUrl        : './nz-tabs-nav.component.html'
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  templateUrl: './nz-tabs-nav.component.html'
 })
 export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit {
   private _tabPositionMode: NzTabPositionMode = 'horizontal';
@@ -88,12 +98,13 @@ export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit
     return this._selectedIndex;
   }
 
-  constructor(public elementRef: ElementRef,
-              private ngZone: NgZone,
-              private renderer: Renderer2,
-              private cdr: ChangeDetectorRef,
-              @Optional() private dir: Directionality) {
-  }
+  constructor(
+    public elementRef: ElementRef,
+    private ngZone: NgZone,
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef,
+    @Optional() private dir: Directionality
+  ) {}
 
   onContentChanges(): void {
     const textContent = this.elementRef.nativeElement.textContent;
@@ -109,7 +120,6 @@ export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit
         this.cdr.markForCheck();
       });
     }
-
   }
 
   scrollHeader(scrollDir: ScrollDirection): void {
@@ -119,11 +129,10 @@ export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit
       this.nzOnNextClick.emit();
     }
     // Move the scroll distance one-third the length of the tab list's viewport.
-    this.scrollDistance += (scrollDir === 'before' ? -1 : 1) * this.viewWidthHeightPix / 3;
+    this.scrollDistance += ((scrollDir === 'before' ? -1 : 1) * this.viewWidthHeightPix) / 3;
   }
 
   ngAfterContentChecked(): void {
-
     if (this.tabLabelCount !== this.listOfNzTabLabelDirective.length) {
       if (this.nzShowPagination) {
         this.updatePagination();
@@ -152,15 +161,16 @@ export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit
   ngAfterContentInit(): void {
     this.realignInkBar = this.ngZone.runOutsideAngular(() => {
       const dirChange = this.dir ? this.dir.change : observableOf(null);
-      const resize = typeof window !== 'undefined' ?
-        fromEvent(window, 'resize').pipe(auditTime(10)) :
-        observableOf(null);
-      return merge(dirChange, resize).pipe(startWith(null)).subscribe(() => {
-        if (this.nzShowPagination) {
-          this.updatePagination();
-        }
-        this.alignInkBarToSelectedTab();
-      });
+      const resize =
+        typeof window !== 'undefined' ? fromEvent(window, 'resize').pipe(auditTime(10)) : observableOf(null);
+      return merge(dirChange, resize)
+        .pipe(startWith(null))
+        .subscribe(() => {
+          if (this.nzShowPagination) {
+            this.updatePagination();
+          }
+          this.alignInkBarToSelectedTab();
+        });
     });
   }
 
@@ -192,9 +202,7 @@ export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit
   }
 
   scrollToLabel(labelIndex: number): void {
-    const selectedLabel = this.listOfNzTabLabelDirective
-      ? this.listOfNzTabLabelDirective.toArray()[ labelIndex ]
-      : null;
+    const selectedLabel = this.listOfNzTabLabelDirective ? this.listOfNzTabLabelDirective.toArray()[labelIndex] : null;
 
     if (selectedLabel) {
       // The view length is the visible width of the tab labels.
@@ -241,7 +249,7 @@ export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit
    * should be called sparingly.
    */
   getMaxScrollDistance(): number {
-    return (this.tabListScrollWidthHeightPix - this.viewWidthHeightPix) || 0;
+    return this.tabListScrollWidthHeightPix - this.viewWidthHeightPix || 0;
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
@@ -293,9 +301,10 @@ export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit
 
   alignInkBarToSelectedTab(): void {
     if (this.nzType === 'line') {
-      const selectedLabelWrapper = this.listOfNzTabLabelDirective && this.listOfNzTabLabelDirective.length
-        ? this.listOfNzTabLabelDirective.toArray()[ this.selectedIndex ].elementRef.nativeElement
-        : null;
+      const selectedLabelWrapper =
+        this.listOfNzTabLabelDirective && this.listOfNzTabLabelDirective.length
+          ? this.listOfNzTabLabelDirective.toArray()[this.selectedIndex].elementRef.nativeElement
+          : null;
       if (this.nzTabsInkBarDirective) {
         this.nzTabsInkBarDirective.alignToElement(selectedLabelWrapper);
       }

@@ -14,6 +14,14 @@ Keyboard and mouse can be used for providing or changing data.
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzInputModule } from 'ng-zorro-antd';
+```
+
 ### [nz-input]
 
 All props of input supported by [w3c standards](https://www.w3schools.com/tags/tag_input.asp) and Angular can used in `nz-input`.

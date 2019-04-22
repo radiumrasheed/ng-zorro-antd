@@ -1,6 +1,6 @@
 ---
 category: Components
-type: Data Display
+type: 数据展示
 title: Card
 subtitle: 卡片
 cols: 1
@@ -16,6 +16,14 @@ cols: 1
 
 ```html
 <nz-card nzTitle="卡片标题">卡片内容</nz-card>
+```
+
+### 单独引入此组件
+
+想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
+
+```ts
+import { NzCardModule } from 'ng-zorro-antd';
 ```
 
 ### nz-card

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -10,23 +18,24 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { zoomBigMotion } from '../core/animation/zoom';
-import { NzNoAnimationDirective } from '../core/no-animation/nz-no-animation.directive';
-import { isNotNil } from '../core/util';
-import { NzToolTipComponent } from '../tooltip/nz-tooltip.component';
+import { isNotNil, zoomBigMotion, NzNoAnimationDirective } from 'ng-zorro-antd/core';
+import { NzToolTipComponent } from 'ng-zorro-antd/tooltip';
 
 @Component({
-  selector           : 'nz-popover',
-  animations         : [ zoomBigMotion ],
-  templateUrl        : './nz-popover.component.html',
-  changeDetection    : ChangeDetectionStrategy.OnPush,
-  encapsulation      : ViewEncapsulation.None,
+  selector: 'nz-popover',
+  exportAs: 'nzPopoverComponent',
+  animations: [zoomBigMotion],
+  templateUrl: './nz-popover.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
-  styles             : [ `
-    .ant-popover {
-      position: relative;
-    }
-  ` ]
+  styles: [
+    `
+      .ant-popover {
+        position: relative;
+      }
+    `
+  ]
 })
 export class NzPopoverComponent extends NzToolTipComponent {
   _prefix = 'ant-popover-placement';
@@ -40,8 +49,9 @@ export class NzPopoverComponent extends NzToolTipComponent {
   }
 
   protected isContentEmpty(): boolean {
-    const isTitleEmpty = this.nzTitle instanceof TemplateRef ? false : (this.nzTitle === '' || !isNotNil(this.nzTitle));
-    const isContentEmpty = this.nzContent instanceof TemplateRef ? false : (this.nzContent === '' || !isNotNil(this.nzContent));
+    const isTitleEmpty = this.nzTitle instanceof TemplateRef ? false : this.nzTitle === '' || !isNotNil(this.nzTitle);
+    const isContentEmpty =
+      this.nzContent instanceof TemplateRef ? false : this.nzContent === '' || !isNotNil(this.nzContent);
     return isTitleEmpty && isContentEmpty;
   }
 }

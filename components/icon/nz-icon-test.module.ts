@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { NgModule } from '@angular/core';
 import { IconDefinition } from '@ant-design/icons-angular';
 import * as AllIcons from '@ant-design/icons-angular/icons';
@@ -16,9 +24,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
  */
 // @dynamic
 @NgModule({
-  exports: [
-    NzIconModule
-  ],
+  exports: [NzIconModule],
   providers: [
     {
       provide: NZ_ICONS,

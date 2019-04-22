@@ -15,6 +15,14 @@ A breadcrumb displays the current location within a hierarchy. It allows going b
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzBreadCrumbModule } from 'ng-zorro-antd';
+```
+
 ### nz-breadcrumb
 
 | Property | Description | Type | Default |

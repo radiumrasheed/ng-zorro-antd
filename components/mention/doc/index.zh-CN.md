@@ -1,7 +1,7 @@
 ---
 category: Components
 subtitle: 提及
-type: Data Entry
+type: 数据录入
 title: Mention
 ---
 
@@ -21,6 +21,14 @@ title: Mention
     nzMentionTrigger>
   </textarea>
 </nz-mention>
+```
+
+### 单独引入此组件
+
+想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
+
+```ts
+import { NzMentionModule } from 'ng-zorro-antd';
 ```
 
 ### nz-mention

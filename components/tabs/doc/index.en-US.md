@@ -17,6 +17,14 @@ Ant Design has 3 types of Tabs for different situations.
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzTabsModule } from 'ng-zorro-antd';
+```
+
 ### nz-tabset
 
 | Property | Description | Type | Default |

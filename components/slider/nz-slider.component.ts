@@ -1,3 +1,12 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
+import { Platform } from '@angular/cdk/platform';
 import {
   forwardRef,
   ChangeDetectionStrategy,
@@ -18,11 +27,17 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fromEvent, merge, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, pluck, takeUntil, tap } from 'rxjs/operators';
 
-import { InputBoolean } from '../core/util/convert';
-import { getElementOffset, silentEvent, MouseTouchObserverConfig } from '../core/util/dom';
-
-import { arraysEqual, shallowCopyArray } from '../core/util/array';
-import { ensureNumberInRange, getPercent, getPrecision } from '../core/util/number';
+import {
+  arraysEqual,
+  ensureNumberInRange,
+  getElementOffset,
+  getPercent,
+  getPrecision,
+  shallowCopyArray,
+  silentEvent,
+  InputBoolean,
+  MouseTouchObserverConfig
+} from 'ng-zorro-antd/core';
 
 import {
   isValueARange,
@@ -35,16 +50,19 @@ import {
 import { getValueTypeNotMatchError } from './nz-slider-error';
 
 @Component({
-  changeDetection    : ChangeDetectionStrategy.OnPush,
-  encapsulation      : ViewEncapsulation.None,
-  selector           : 'nz-slider',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  selector: 'nz-slider',
+  exportAs: 'nzSlider',
   preserveWhitespaces: false,
-  providers          : [ {
-    provide    : NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => NzSliderComponent),
-    multi      : true
-  } ],
-  templateUrl        : './nz-slider.component.html'
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => NzSliderComponent),
+      multi: true
+    }
+  ],
+  templateUrl: './nz-slider.component.html'
 })
 export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
   @ViewChild('slider') slider: ElementRef;
@@ -69,10 +87,10 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
   cacheSliderStart: number | null = null;
   cacheSliderLength: number | null = null;
   activeValueIndex: number | undefined = undefined; // Current activated handle's index ONLY for range=true
-  track: { offset: null | number, length: null | number } = { offset: null, length: null }; // Track's offset and length
+  track: { offset: null | number; length: null | number } = { offset: null, length: null }; // Track's offset and length
   handles: SliderHandler[]; // Handles' offset
   marksArray: ExtendedMark[] | null; // "steps" in array type with more data & FILTER out the invalid mark
-  bounds: { lower: SliderValue | null, upper: SliderValue | null } = { lower: null, upper: null }; // now for nz-slider-step
+  bounds: { lower: SliderValue | null; upper: SliderValue | null } = { lower: null, upper: null }; // now for nz-slider-step
   isDragging = false; // Current dragging state
 
   private dragStart$: Observable<number>;
@@ -82,13 +100,15 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
   private dragMove_: Subscription | null;
   private dragEnd_: Subscription | null;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef, private platform: Platform) {}
 
   ngOnInit(): void {
     this.handles = this.generateHandles(this.nzRange ? 2 : 1);
     this.sliderDOM = this.slider.nativeElement;
     this.marksArray = this.nzMarks ? this.generateMarkItems(this.nzMarks) : null;
-    this.createDraggingObservables();
+    if (this.platform.isBrowser) {
+      this.createDraggingObservables();
+    }
     this.toggleDragDisabled(this.nzDisabled);
 
     if (this.getValue() === null) {
@@ -116,11 +136,9 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
     this.setValue(val, true);
   }
 
-  onValueChange(_value: SliderValue): void {
-  }
+  onValueChange(_value: SliderValue): void {}
 
-  onTouched(): void {
-  }
+  onTouched(): void {}
 
   registerOnChange(fn: (value: SliderValue) => void): void {
     this.onValueChange = fn;
@@ -191,7 +209,7 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
   private setActiveValue(pointerValue: number): void {
     if (isValueARange(this.value!)) {
       const newValue = shallowCopyArray(this.value as number[]);
-      newValue[ this.activeValueIndex! ] = pointerValue;
+      newValue[this.activeValueIndex!] = pointerValue;
       this.setValue(newValue);
     } else {
       this.setValue(pointerValue);
@@ -206,18 +224,18 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
     const offset = this.getValueToOffset(value);
     const valueSorted = this.getValue(true);
     const offsetSorted = this.getValueToOffset(valueSorted);
-    const boundParts = isValueARange(valueSorted) ? valueSorted : [ 0, valueSorted ];
+    const boundParts = isValueARange(valueSorted) ? valueSorted : [0, valueSorted];
     const trackParts = isValueARange(offsetSorted)
-      ? [ offsetSorted[ 0 ], offsetSorted[ 1 ] - offsetSorted[ 0 ] ]
-      : [ 0, offsetSorted ];
+      ? [offsetSorted[0], offsetSorted[1] - offsetSorted[0]]
+      : [0, offsetSorted];
 
     this.handles.forEach((handle, index) => {
-      handle.offset = isValueARange(offset) ? offset[ index ] : offset;
-      handle.value = isValueARange(value) ? value[ index ] : value || 0;
+      handle.offset = isValueARange(offset) ? offset[index] : offset;
+      handle.value = isValueARange(value) ? value[index] : value || 0;
     });
 
-    [ this.bounds.lower, this.bounds.upper ] = boundParts;
-    [ this.track.offset, this.track.length ] = trackParts;
+    [this.bounds.lower, this.bounds.upper] = boundParts;
+    [this.track.offset, this.track.length] = trackParts;
 
     this.cdr.markForCheck();
   }
@@ -250,21 +268,21 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
     const sliderDOM = this.sliderDOM;
     const orientField = this.nzVertical ? 'pageY' : 'pageX';
     const mouse: MouseTouchObserverConfig = {
-      start   : 'mousedown',
-      move    : 'mousemove',
-      end     : 'mouseup',
-      pluckKey: [ orientField ]
+      start: 'mousedown',
+      move: 'mousemove',
+      end: 'mouseup',
+      pluckKey: [orientField]
     };
     const touch: MouseTouchObserverConfig = {
-      start   : 'touchstart',
-      move    : 'touchmove',
-      end     : 'touchend',
-      pluckKey: [ 'touches', '0', orientField ],
-      filter  : (e: MouseEvent | TouchEvent) => e instanceof TouchEvent
+      start: 'touchstart',
+      move: 'touchmove',
+      end: 'touchend',
+      pluckKey: ['touches', '0', orientField],
+      filter: (e: MouseEvent | TouchEvent) => e instanceof TouchEvent
     };
 
-    [ mouse, touch ].forEach(source => {
-      const { start, move, end, pluckKey, filter: filterFunc = (() => true) } = source;
+    [mouse, touch].forEach(source => {
+      const { start, move, end, pluckKey, filter: filterFunc = () => true } = source;
 
       source.startPlucked$ = fromEvent(sliderDOM, start).pipe(
         filter(filterFunc),
@@ -289,7 +307,7 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
     this.dragEnd$ = merge(mouse.end$!, touch.end$!);
   }
 
-  private subscribeDrag(periods: string[] = [ 'start', 'move', 'end' ]): void {
+  private subscribeDrag(periods: string[] = ['start', 'move', 'end']): void {
     if (periods.indexOf('start') !== -1 && this.dragStart$ && !this.dragStart_) {
       this.dragStart_ = this.dragStart$.subscribe(this.onDragStart.bind(this));
     }
@@ -303,7 +321,7 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
     }
   }
 
-  private unsubscribeDrag(periods: string[] = [ 'start', 'move', 'end' ]): void {
+  private unsubscribeDrag(periods: string[] = ['start', 'move', 'end']): void {
     if (periods.indexOf('start') !== -1 && this.dragStart_) {
       this.dragStart_.unsubscribe();
       this.dragStart_ = null;
@@ -321,7 +339,7 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
   }
 
   private toggleDragMoving(movable: boolean): void {
-    const periods = [ 'move', 'end' ];
+    const periods = ['move', 'end'];
     if (movable) {
       this.isDragging = true;
       this.subscribeDrag(periods);
@@ -335,7 +353,7 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
     if (disabled) {
       this.unsubscribeDrag();
     } else {
-      this.subscribeDrag([ 'start' ]);
+      this.subscribeDrag(['start']);
     }
   }
 
@@ -344,13 +362,13 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
     const sliderLength = this.getSliderLength();
     const ratio = ensureNumberInRange((position - sliderStart) / sliderLength, 0, 1);
     const val = (this.nzMax - this.nzMin) * (this.nzVertical ? 1 - ratio : ratio) + this.nzMin;
-    const points = (this.nzMarks === null ? [] : Object.keys(this.nzMarks).map(parseFloat));
+    const points = this.nzMarks === null ? [] : Object.keys(this.nzMarks).map(parseFloat);
     if (this.nzStep !== null && !this.nzDots) {
       const closestOne = Math.round(val / this.nzStep) * this.nzStep;
       points.push(closestOne);
     }
     const gaps = points.map(point => Math.abs(val - point));
-    const closest = points[ gaps.indexOf(Math.min(...gaps)) ];
+    const closest = points[gaps.indexOf(Math.min(...gaps))];
     return this.nzStep === null ? closest : parseFloat(closest.toFixed(getPrecision(this.nzStep)));
   }
 
@@ -385,9 +403,7 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
   private formatValue(value: SliderValue | null): SliderValue {
     let res = value;
     if (!this.assertValueValid(value!)) {
-      res = this.nzDefaultValue === null
-        ? (this.nzRange ? [ this.nzMin, this.nzMax ] : this.nzMin)
-        : this.nzDefaultValue;
+      res = this.nzDefaultValue === null ? (this.nzRange ? [this.nzMin, this.nzMax] : this.nzMin) : this.nzDefaultValue;
     } else {
       res = isValueARange(value!)
         ? (value as number[]).map(val => ensureNumberInRange(val, this.nzMin, this.nzMax))
@@ -437,17 +453,19 @@ export class NzSliderComponent implements ControlValueAccessor, OnInit, OnChange
   }
 
   private hideAllHandleTooltip(): void {
-    this.handles.forEach(handle => handle.active = false);
+    this.handles.forEach(handle => (handle.active = false));
   }
 
   private generateHandles(amount: number): SliderHandler[] {
-    return Array(amount).fill(0).map(() => ({ offset: null, value: null, active: false }));
+    return Array(amount)
+      .fill(0)
+      .map(() => ({ offset: null, value: null, active: false }));
   }
 
   private generateMarkItems(marks: Marks): ExtendedMark[] | null {
     const marksArray: ExtendedMark[] = [];
     for (const key in marks) {
-      const mark = marks[ key ];
+      const mark = marks[key];
       const val = typeof key === 'number' ? key : parseFloat(key);
       if (val >= this.nzMin && val <= this.nzMax) {
         marksArray.push({ value: val, offset: this.valueToOffset(val), config: mark });

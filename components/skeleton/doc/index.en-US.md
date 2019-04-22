@@ -14,6 +14,14 @@ Provide a placeholder at the place which need waiting for loading.
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzSkeletonModule } from 'ng-zorro-antd';
+```
+
 ### nz-skeleton
 
 | Property | Description | Type | Default |

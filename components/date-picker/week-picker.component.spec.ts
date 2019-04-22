@@ -4,7 +4,7 @@ import { fakeAsync, inject, tick, ComponentFixture, TestBed } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { dispatchMouseEvent } from '../core/testing';
+import { dispatchMouseEvent } from 'ng-zorro-antd/core';
 import { NzDatePickerModule } from './date-picker.module';
 
 describe('NzWeekPickerComponent', () => {
@@ -16,14 +16,14 @@ describe('NzWeekPickerComponent', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports     : [ NoopAnimationsModule, NzDatePickerModule ],
-      declarations: [ NzTestWeekPickerComponent ]
+      imports: [NoopAnimationsModule, NzDatePickerModule],
+      declarations: [NzTestWeekPickerComponent]
     });
 
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([ OverlayContainer ], (oc: OverlayContainer) => {
+  beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
     overlayContainer = oc;
     overlayContainerElement = oc.getContainerElement();
   }));
@@ -62,7 +62,6 @@ describe('NzWeekPickerComponent', () => {
     dispatchMouseEvent(getPickerTrigger(), 'click');
     fixture.detectChanges();
   }
-
 });
 
 @Component({

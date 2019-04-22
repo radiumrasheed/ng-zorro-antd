@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   ChangeDetectorRef,
   EventEmitter,
@@ -10,18 +18,16 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NzNoAnimationDirective } from '../core/no-animation/nz-no-animation.directive';
-import { InputBoolean } from '../core/util/convert';
-import { DateHelperService } from '../i18n/date-helper.service';
-import { NzDatePickerI18nInterface } from '../i18n/nz-i18n.interface';
-import { NzI18nService } from '../i18n/nz-i18n.service';
-import { CandyDate } from './lib/candy-date';
+
+import { InputBoolean, NzNoAnimationDirective } from 'ng-zorro-antd/core';
+import { DateHelperService, NzDatePickerI18nInterface, NzI18nService } from 'ng-zorro-antd/i18n';
+
+import { CandyDate } from './lib/candy-date/candy-date';
 import { NzPickerComponent } from './picker.component';
 
-const POPUP_STYLE_PATCH = { 'position': 'relative' }; // Aim to override antd's style to support overlay's position strategy (position:absolute will cause it not working beacuse the overlay can't get the height/width of it's content)
+const POPUP_STYLE_PATCH = { position: 'relative' }; // Aim to override antd's style to support overlay's position strategy (position:absolute will cause it not working beacuse the overlay can't get the height/width of it's content)
 
 /**
  * The base picker for all common APIs
@@ -60,14 +66,17 @@ export abstract class AbstractPickerComponent implements OnInit, OnChanges, OnDe
   protected destroyed$: Subject<void> = new Subject();
   protected isCustomPlaceHolder: boolean = false;
 
-  constructor(protected i18n: NzI18nService, protected cdr: ChangeDetectorRef, protected dateHelper: DateHelperService, public noAnimation?: NzNoAnimationDirective) { }
+  constructor(
+    protected i18n: NzI18nService,
+    protected cdr: ChangeDetectorRef,
+    protected dateHelper: DateHelperService,
+    public noAnimation?: NzNoAnimationDirective
+  ) {}
 
   ngOnInit(): void {
     // Subscribe the every locale change if the nzLocale is not handled by user
     if (!this.nzLocale) {
-      this.i18n.localeChange
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(() => this.setLocale());
+      this.i18n.localeChange.pipe(takeUntil(this.destroyed$)).subscribe(() => this.setLocale());
     }
 
     // Default value
@@ -75,7 +84,8 @@ export abstract class AbstractPickerComponent implements OnInit, OnChanges, OnDe
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.nzPopupStyle) { // Always assign the popup style patch
+    if (changes.nzPopupStyle) {
+      // Always assign the popup style patch
       this.nzPopupStyle = this.nzPopupStyle ? { ...this.nzPopupStyle, ...POPUP_STYLE_PATCH } : POPUP_STYLE_PATCH;
     }
 
@@ -84,7 +94,8 @@ export abstract class AbstractPickerComponent implements OnInit, OnChanges, OnDe
       this.isCustomPlaceHolder = true;
     }
 
-    if (changes.nzLocale) { // The nzLocale is currently handled by user
+    if (changes.nzLocale) {
+      // The nzLocale is currently handled by user
       this.setDefaultPlaceHolder();
     }
   }
@@ -107,7 +118,7 @@ export abstract class AbstractPickerComponent implements OnInit, OnChanges, OnDe
     if (this.isRange) {
       const vAsRange = this.nzValue as CandyDate[];
       if (vAsRange.length) {
-        this.onChangeFn([ vAsRange[ 0 ].nativeDate, vAsRange[ 1 ].nativeDate ]);
+        this.onChangeFn([vAsRange[0].nativeDate, vAsRange[1].nativeDate]);
       } else {
         this.onChangeFn([]);
       }
@@ -142,11 +153,13 @@ export abstract class AbstractPickerComponent implements OnInit, OnChanges, OnDe
     this.cdr.markForCheck();
   }
 
-  registerOnChange(fn: any): void { // tslint:disable-line:no-any
+  // tslint:disable-next-line:no-any
+  registerOnChange(fn: any): void {
     this.onChangeFn = fn;
   }
 
-  registerOnTouched(fn: any): void { // tslint:disable-line:no-any
+  // tslint:disable-next-line:no-any
+  registerOnTouched(fn: any): void {
     this.onTouchedFn = fn;
   }
 

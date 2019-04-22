@@ -12,6 +12,14 @@ For displaying anchor hyperlinks on page and jumping between them.
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzAnchorModule } from 'ng-zorro-antd';
+```
+
 ### nz-anchor
 
 | Property | Description | Type | Default |

@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation
+} from '@angular/core';
 
-import { NzCalendarI18nInterface } from '../../../i18n/nz-i18n.interface';
-import { CandyDate } from '../candy-date';
+import { NzCalendarI18nInterface } from 'ng-zorro-antd/i18n';
+import { CandyDate } from '../candy-date/candy-date';
 
 const MAX_ROW = 4;
 const MAX_COL = 3;
@@ -11,9 +20,9 @@ const MAX_COL = 3;
   changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line:component-selector
   selector: 'decade-panel',
+  exportAs: 'decadePanel',
   templateUrl: 'decade-panel.component.html'
 })
-
 export class DecadePanelComponent implements OnChanges {
   @Input() locale: NzCalendarI18nInterface;
 
@@ -76,14 +85,14 @@ export class DecadePanelComponent implements OnChanges {
     const previousYear = startYear - 10;
 
     let index = 0;
-    for (let rowIndex = 0; rowIndex < MAX_ROW; rowIndex ++) {
+    for (let rowIndex = 0; rowIndex < MAX_ROW; rowIndex++) {
       decades[rowIndex] = [];
-      for (let colIndex = 0; colIndex < MAX_COL; colIndex ++) {
+      for (let colIndex = 0; colIndex < MAX_COL; colIndex++) {
         const start = previousYear + index * 10;
         const end = previousYear + index * 10 + 9;
         const content = `${start}-${end}`;
 
-        const cell: PanelDecadeData = decades[rowIndex][colIndex] = {
+        const cell: PanelDecadeData = (decades[rowIndex][colIndex] = {
           content,
           title: content,
           isCurrent: currentYear >= start && currentYear <= end,
@@ -91,7 +100,7 @@ export class DecadePanelComponent implements OnChanges {
           isBiggerThanEnd: start > endYear,
           classMap: null,
           onClick: null
-        };
+        });
 
         cell.classMap = {
           [`${this.prefixCls}-cell`]: true,
@@ -108,7 +117,7 @@ export class DecadePanelComponent implements OnChanges {
           cell.onClick = () => this.chooseDecade(start);
         }
 
-        index ++;
+        index++;
       }
     }
     return decades;

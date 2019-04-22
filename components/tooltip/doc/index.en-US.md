@@ -13,6 +13,14 @@ A simple text popup tip.
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzTooltipModule } from 'ng-zorro-antd';
+```
+
 ### nz-tooltip
 
 | Property | Description | Type | Default |

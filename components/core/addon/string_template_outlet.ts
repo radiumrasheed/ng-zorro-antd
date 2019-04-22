@@ -1,7 +1,8 @@
 import { Directive, EmbeddedViewRef, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[nzStringTemplateOutlet]'
+  selector: '[nzStringTemplateOutlet]',
+  exportAs: 'nzStringTemplateOutlet'
 })
 export class NzStringTemplateOutletDirective {
   private isTemplate: boolean;
@@ -9,8 +10,7 @@ export class NzStringTemplateOutletDirective {
   private inputViewRef: EmbeddedViewRef<void> | null = null;
   private defaultViewRef: EmbeddedViewRef<void> | null = null;
 
-  constructor(private viewContainer: ViewContainerRef, private defaultTemplate: TemplateRef<void>) {
-  }
+  constructor(private viewContainer: ViewContainerRef, private defaultTemplate: TemplateRef<void>) {}
 
   @Input()
   set nzStringTemplateOutlet(value: string | TemplateRef<void>) {

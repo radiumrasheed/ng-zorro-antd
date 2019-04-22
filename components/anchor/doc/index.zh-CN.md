@@ -1,7 +1,7 @@
 ---
 category: Components
 subtitle: 锚点
-type: Other
+type: 其他
 title: Anchor
 ---
 
@@ -12,6 +12,14 @@ title: Anchor
 需要展现当前页面上可供跳转的锚点链接，以及快速在锚点之间跳转。
 
 ## API
+
+### 单独引入此组件
+
+想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
+
+```ts
+import { NzAnchorModule } from 'ng-zorro-antd';
+```
 
 ### nz-anchor
 

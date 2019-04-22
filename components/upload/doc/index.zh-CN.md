@@ -1,7 +1,7 @@
 ---
 category: Components
 subtitle: 上传
-type: Data Entry
+type: 数据录入
 title: Upload
 ---
 
@@ -18,6 +18,14 @@ title: Upload
 ## API
 
 > 服务端上传接口实现可以参考 [jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload/wiki)。
+
+### 单独引入此组件
+
+想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
+
+```ts
+import { NzUploadModule } from 'ng-zorro-antd';
+```
 
 ### nz-upload
 

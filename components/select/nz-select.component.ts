@@ -1,5 +1,14 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { Platform } from '@angular/cdk/platform';
 import {
   forwardRef,
   AfterContentInit,
@@ -25,11 +34,16 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { merge, EMPTY, Subject } from 'rxjs';
 import { flatMap, startWith, takeUntil } from 'rxjs/operators';
-import { slideMotion } from '../core/animation/slide';
-import { NzNoAnimationDirective } from '../core/no-animation/nz-no-animation.directive';
-import { NzSizeLDSType } from '../core/types/size';
-import { isNotNil } from '../core/util/check';
-import { toBoolean, InputBoolean } from '../core/util/convert';
+
+import {
+  isNotNil,
+  slideMotion,
+  toBoolean,
+  InputBoolean,
+  NzNoAnimationDirective,
+  NzSizeLDSType
+} from 'ng-zorro-antd/core';
+
 import { NzOptionGroupComponent } from './nz-option-group.component';
 import { NzOptionComponent } from './nz-option.component';
 import { TFilterOption } from './nz-option.pipe';
@@ -37,40 +51,43 @@ import { NzSelectTopControlComponent } from './nz-select-top-control.component';
 import { NzSelectService } from './nz-select.service';
 
 @Component({
-  selector           : 'nz-select',
+  selector: 'nz-select',
+  exportAs: 'nzSelect',
   preserveWhitespaces: false,
-  providers          : [
+  providers: [
     NzSelectService,
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => NzSelectComponent),
-      multi      : true
+      multi: true
     }
   ],
-  changeDetection    : ChangeDetectionStrategy.OnPush,
-  encapsulation      : ViewEncapsulation.None,
-  animations         : [ slideMotion ],
-  templateUrl        : './nz-select.component.html',
-  host               : {
-    '[class.ant-select-lg]'         : 'nzSize==="large"',
-    '[class.ant-select-sm]'         : 'nzSize==="small"',
-    '[class.ant-select-enabled]'    : '!nzDisabled',
-    '[class.ant-select-no-arrow]'   : '!nzShowArrow',
-    '[class.ant-select-disabled]'   : 'nzDisabled',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  animations: [slideMotion],
+  templateUrl: './nz-select.component.html',
+  host: {
+    '[class.ant-select-lg]': 'nzSize==="large"',
+    '[class.ant-select-sm]': 'nzSize==="small"',
+    '[class.ant-select-enabled]': '!nzDisabled',
+    '[class.ant-select-no-arrow]': '!nzShowArrow',
+    '[class.ant-select-disabled]': 'nzDisabled',
     '[class.ant-select-allow-clear]': 'nzAllowClear',
-    '[class.ant-select-open]'       : 'open',
-    '(click)'                       : 'toggleDropDown()'
+    '[class.ant-select-open]': 'open',
+    '(click)': 'toggleDropDown()'
   },
-  styles             : [ `
-    .ant-select-dropdown {
-      top: 100%;
-      left: 0;
-      position: relative;
-      width: 100%;
-      margin-top: 4px;
-      margin-bottom: 4px;
-    }
-  ` ]
+  styles: [
+    `
+      .ant-select-dropdown {
+        top: 100%;
+        left: 0;
+        position: relative;
+        width: 100%;
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+    `
+  ]
 })
 export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy, AfterContentInit {
   open = false;
@@ -98,7 +115,7 @@ export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterVie
   @Input() nzSize: NzSizeLDSType = 'default';
   @Input() nzDropdownClassName: string;
   @Input() nzDropdownMatchSelectWidth = true;
-  @Input() nzDropdownStyle: { [ key: string ]: string; };
+  @Input() nzDropdownStyle: { [key: string]: string };
   @Input() nzNotFoundContent: string;
   @Input() @InputBoolean() nzAllowClear = false;
   @Input() @InputBoolean() nzShowSearch = false;
@@ -180,7 +197,11 @@ export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterVie
   updateAutoFocus(): void {
     if (this.nzSelectTopControlComponent.inputElement) {
       if (this.nzAutoFocus) {
-        this.renderer.setAttribute(this.nzSelectTopControlComponent.inputElement.nativeElement, 'autofocus', 'autofocus');
+        this.renderer.setAttribute(
+          this.nzSelectTopControlComponent.inputElement.nativeElement,
+          'autofocus',
+          'autofocus'
+        );
       } else {
         this.renderer.removeAttribute(this.nzSelectTopControlComponent.inputElement.nativeElement, 'autofocus');
       }
@@ -220,7 +241,9 @@ export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterVie
   }
 
   updateCdkConnectedOverlayStatus(): void {
-    this.triggerWidth = this.cdkOverlayOrigin.elementRef.nativeElement.getBoundingClientRect().width;
+    if (this.platform.isBrowser) {
+      this.triggerWidth = this.cdkOverlayOrigin.elementRef.nativeElement.getBoundingClientRect().width;
+    }
   }
 
   updateCdkConnectedOverlayPositions(): void {
@@ -231,12 +254,15 @@ export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterVie
     });
   }
 
-  constructor(private renderer: Renderer2,
-              public nzSelectService: NzSelectService,
-              private cdr: ChangeDetectorRef,
-              private focusMonitor: FocusMonitor,
-              elementRef: ElementRef,
-              @Host() @Optional() public noAnimation?: NzNoAnimationDirective) {
+  constructor(
+    private renderer: Renderer2,
+    public nzSelectService: NzSelectService,
+    private cdr: ChangeDetectorRef,
+    private focusMonitor: FocusMonitor,
+    private platform: Platform,
+    elementRef: ElementRef,
+    @Host() @Optional() public noAnimation?: NzNoAnimationDirective
+  ) {
     renderer.addClass(elementRef.nativeElement, 'ant-select');
   }
 
@@ -249,7 +275,7 @@ export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterVie
       if (Array.isArray(value)) {
         listValue = value;
       } else {
-        listValue = [ value ];
+        listValue = [value];
       }
     }
     this.nzSelectService.updateListOfSelectedValue(listValue, false);
@@ -270,24 +296,18 @@ export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterVie
   }
 
   ngOnInit(): void {
-    this.nzSelectService.searchValue$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(data => {
+    this.nzSelectService.searchValue$.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.nzOnSearch.emit(data);
       this.updateCdkConnectedOverlayPositions();
     });
-    this.nzSelectService.modelChange$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(modelValue => {
+    this.nzSelectService.modelChange$.pipe(takeUntil(this.destroy$)).subscribe(modelValue => {
       if (this.value !== modelValue) {
         this.value = modelValue;
         this.onChange(this.value);
         this.updateCdkConnectedOverlayPositions();
       }
     });
-    this.nzSelectService.open$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((value) => {
+    this.nzSelectService.open$.pipe(takeUntil(this.destroy$)).subscribe(value => {
       if (this.open !== value) {
         this.nzOpenChange.emit(value);
       }
@@ -300,9 +320,7 @@ export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterVie
       }
       this.open = value;
     });
-    this.nzSelectService.check$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(() => {
+    this.nzSelectService.check$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.cdr.markForCheck();
     });
   }
@@ -313,21 +331,26 @@ export class NzSelectComponent implements ControlValueAccessor, OnInit, AfterVie
   }
 
   ngAfterContentInit(): void {
-    this.listOfNzOptionGroupComponent.changes.pipe(
-      startWith(true),
-      flatMap(() => merge(
-        this.listOfNzOptionGroupComponent.changes,
-        this.listOfNzOptionComponent.changes,
-        ...this.listOfNzOptionGroupComponent.map(group => group.listOfNzOptionComponent ? group.listOfNzOptionComponent.changes : EMPTY)
-      ).pipe(
-        startWith(true)
-      ))
-    ).subscribe(() => {
-      this.nzSelectService.updateTemplateOption(
-        this.listOfNzOptionComponent.toArray(),
-        this.listOfNzOptionGroupComponent.toArray()
-      );
-    });
+    this.listOfNzOptionGroupComponent.changes
+      .pipe(
+        startWith(true),
+        flatMap(() =>
+          merge(
+            this.listOfNzOptionGroupComponent.changes,
+            this.listOfNzOptionComponent.changes,
+            ...this.listOfNzOptionComponent.map(option => option.changes),
+            ...this.listOfNzOptionGroupComponent.map(group =>
+              group.listOfNzOptionComponent ? group.listOfNzOptionComponent.changes : EMPTY
+            )
+          ).pipe(startWith(true))
+        )
+      )
+      .subscribe(() => {
+        this.nzSelectService.updateTemplateOption(
+          this.listOfNzOptionComponent.toArray(),
+          this.listOfNzOptionGroupComponent.toArray()
+        );
+      });
   }
 
   ngOnDestroy(): void {

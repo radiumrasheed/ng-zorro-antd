@@ -1,7 +1,16 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, ElementRef,
+  Component,
+  ElementRef,
   Input,
   Renderer2,
   TemplateRef,
@@ -9,21 +18,22 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { NgClassType } from '../core/types/ng-class';
+import { NgClassType } from 'ng-zorro-antd/core';
 
 @Component({
-  changeDetection    : ChangeDetectionStrategy.OnPush,
-  encapsulation      : ViewEncapsulation.None,
-  selector           : 'nz-step',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  selector: 'nz-step',
+  exportAs: 'nzStep',
   preserveWhitespaces: false,
-  templateUrl        : './nz-step.component.html',
-  host               : {
-    '[class.ant-steps-item-wait]'   : 'nzStatus === "wait"',
+  templateUrl: './nz-step.component.html',
+  host: {
+    '[class.ant-steps-item-wait]': 'nzStatus === "wait"',
     '[class.ant-steps-item-process]': 'nzStatus === "process"',
-    '[class.ant-steps-item-finish]' : 'nzStatus === "finish"',
-    '[class.ant-steps-item-error]'  : 'nzStatus === "error"',
-    '[class.ant-steps-custom]'      : '!!nzIcon',
-    '[class.ant-steps-next-error]'  : '(outStatus === "error") && (currentIndex === index + 1)'
+    '[class.ant-steps-item-finish]': 'nzStatus === "finish"',
+    '[class.ant-steps-item-error]': 'nzStatus === "error"',
+    '[class.ant-steps-custom]': '!!nzIcon',
+    '[class.ant-steps-next-error]': '(outStatus === "error") && (currentIndex === index + 1)'
   }
 })
 export class NzStepComponent {
@@ -64,7 +74,7 @@ export class NzStepComponent {
   isIconString = true;
   private _icon: NgClassType | TemplateRef<void>;
 
-  customProcessTemplate: TemplateRef<{ $implicit: TemplateRef<void>, status: string, index: number }>; // Set by parent.
+  customProcessTemplate: TemplateRef<{ $implicit: TemplateRef<void>; status: string; index: number }>; // Set by parent.
   direction = 'horizontal';
   index = 0;
   last = false;
@@ -78,11 +88,7 @@ export class NzStepComponent {
   set currentIndex(current: number) {
     this._currentIndex = current;
     if (!this.isCustomStatus) {
-      this._status = current > this.index
-        ? 'finish'
-        : current === this.index
-          ? this.outStatus || ''
-          : 'wait';
+      this._status = current > this.index ? 'finish' : current === this.index ? this.outStatus || '' : 'wait';
     }
   }
 

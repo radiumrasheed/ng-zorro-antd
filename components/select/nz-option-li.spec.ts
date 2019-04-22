@@ -2,7 +2,9 @@ import { Component, DebugElement } from '@angular/core';
 import { fakeAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ReplaySubject, Subject } from 'rxjs';
-import { dispatchFakeEvent } from '../core/testing';
+
+import { dispatchFakeEvent } from 'ng-zorro-antd/core';
+
 import { NzOptionLiComponent } from './nz-option-li.component';
 import { NzOptionComponent } from './nz-option.component';
 import { NzSelectService } from './nz-select.service';
@@ -11,15 +13,14 @@ describe('select option li', () => {
   beforeEach(fakeAsync(() => {
     let nzSelectServiceStub: Partial<NzSelectService>;
     nzSelectServiceStub = {
-      activatedOption$    : new ReplaySubject(1),
+      activatedOption$: new ReplaySubject(1),
       listOfSelectedValue$: new Subject(),
-      compareWith         : (o1, o2) => o1 === o2,
-      clickOption         : () => {
-      }
+      compareWith: (o1, o2) => o1 === o2,
+      clickOption: () => {}
     };
     TestBed.configureTestingModule({
-      providers   : [ { provide: NzSelectService, useValue: nzSelectServiceStub } ],
-      declarations: [ NzTestSelectOptionLiComponent, NzOptionLiComponent ]
+      providers: [{ provide: NzSelectService, useValue: nzSelectServiceStub }],
+      declarations: [NzTestSelectOptionLiComponent, NzOptionLiComponent]
     });
     TestBed.compileComponents();
   }));
@@ -41,11 +42,11 @@ describe('select option li', () => {
       fixture.detectChanges();
       expect(liComponent.selected).toBe(false);
       // @ts-ignore
-      nzSelectService.listOfSelectedValue$.next([ '01_value' ]);
+      nzSelectService.listOfSelectedValue$.next(['01_value']);
       fixture.detectChanges();
       expect(liComponent.selected).toBe(true);
       // @ts-ignore
-      nzSelectService.listOfSelectedValue$.next([ '01_label' ]);
+      nzSelectService.listOfSelectedValue$.next(['01_label']);
       fixture.detectChanges();
       expect(liComponent.selected).toBe(false);
     });
@@ -68,13 +69,13 @@ describe('select option li', () => {
       const checkSpy = spyOn(liComponent.cdr, 'markForCheck');
       expect(checkSpy).toHaveBeenCalledTimes(0);
       // @ts-ignore
-      nzSelectService.listOfSelectedValue$.next([ '01_value' ]);
+      nzSelectService.listOfSelectedValue$.next(['01_value']);
       fixture.detectChanges();
       expect(checkSpy).toHaveBeenCalledTimes(1);
       testComponent.destroy = true;
       fixture.detectChanges();
       // @ts-ignore
-      nzSelectService.listOfSelectedValue$.next([ '01_value' ]);
+      nzSelectService.listOfSelectedValue$.next(['01_value']);
       fixture.detectChanges();
       expect(checkSpy).toHaveBeenCalledTimes(1);
     });

@@ -1,7 +1,7 @@
 ---
 category: Components
 subtitle: 评分
-type: Data Entry
+type: 数据录入
 title: Rate
 ---
 
@@ -13,6 +13,14 @@ title: Rate
 - 对事物进行快速的评级操作。
 
 ## API
+
+### 单独引入此组件
+
+想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
+
+```ts
+import { NzRateModule } from 'ng-zorro-antd';
+```
 
 ### nz-rate
 

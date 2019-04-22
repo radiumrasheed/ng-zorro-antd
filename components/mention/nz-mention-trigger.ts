@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { forwardRef, Directive, ElementRef, EventEmitter, ExistingProvider, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -11,19 +19,18 @@ export const NZ_MENTION_TRIGGER_ACCESSOR: ExistingProvider = {
 
 @Directive({
   selector: 'input[nzMentionTrigger], textarea[nzMentionTrigger]',
+  exportAs: 'nzMentionTrigger',
   providers: [NZ_MENTION_TRIGGER_ACCESSOR],
   host: {
-    'autocomplete': 'off',
-    '(focusin)'   : 'onFocusin.emit()',
-    '(blur)'      : 'onBlur.emit()',
-    '(input)'     : 'onInput.emit($event)',
-    '(keydown)'   : 'onKeydown.emit($event)',
-    '(click)'     : 'onClick.emit($event)'
+    autocomplete: 'off',
+    '(focusin)': 'onFocusin.emit()',
+    '(blur)': 'onBlur.emit()',
+    '(input)': 'onInput.emit($event)',
+    '(keydown)': 'onKeydown.emit($event)',
+    '(click)': 'onClick.emit($event)'
   }
 })
-
 export class NzMentionTriggerDirective implements ControlValueAccessor, OnDestroy {
-
   onChange: (value: string) => void;
   onTouched: () => void;
 
@@ -34,8 +41,7 @@ export class NzMentionTriggerDirective implements ControlValueAccessor, OnDestro
   readonly onClick: EventEmitter<MouseEvent> = new EventEmitter();
   value: string;
 
-  constructor(public el: ElementRef) {
-  }
+  constructor(public el: ElementRef) {}
 
   ngOnDestroy(): void {
     this.completeEvents();
@@ -84,5 +90,4 @@ export class NzMentionTriggerDirective implements ControlValueAccessor, OnDestro
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-
 }

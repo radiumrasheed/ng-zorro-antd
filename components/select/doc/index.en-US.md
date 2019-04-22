@@ -19,6 +19,14 @@ Select component to select value from options.
 </nz-select>
 ```
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzSelectModule } from 'ng-zorro-antd';
+```
+
 ### nz-select
 
 | Property | Description | Type | Default |

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -15,16 +23,17 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { isInteger } from '../core/util/check';
-import { toNumber, InputBoolean, InputNumber } from '../core/util/convert';
-import { NzI18nService } from '../i18n/nz-i18n.service';
+
+import { isInteger, toNumber, InputBoolean, InputNumber } from 'ng-zorro-antd/core';
+import { NzI18nService } from 'ng-zorro-antd/i18n';
 
 @Component({
-  selector           : 'nz-pagination',
+  selector: 'nz-pagination',
+  exportAs: 'nzPagination',
   preserveWhitespaces: false,
-  encapsulation      : ViewEncapsulation.None,
-  changeDetection    : ChangeDetectionStrategy.OnPush,
-  templateUrl        : './nz-pagination.component.html'
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './nz-pagination.component.html'
 })
 export class NzPaginationComponent implements OnInit, OnDestroy, OnChanges {
   // tslint:disable-next-line:no-any
@@ -34,11 +43,14 @@ export class NzPaginationComponent implements OnInit, OnDestroy, OnChanges {
   private $destroy = new Subject<void>();
   @Output() readonly nzPageSizeChange: EventEmitter<number> = new EventEmitter();
   @Output() readonly nzPageIndexChange: EventEmitter<number> = new EventEmitter();
-  @Input() nzShowTotal: TemplateRef<{ $implicit: number, range: [ number, number ] }>;
+  @Input() nzShowTotal: TemplateRef<{ $implicit: number; range: [number, number] }>;
   @Input() nzInTable = false;
   @Input() nzSize: 'default' | 'small' = 'default';
-  @Input() nzPageSizeOptions = [ 10, 20, 30, 40 ];
-  @Input() @ViewChild('renderItemTemplate') nzItemRender: TemplateRef<{ $implicit: 'page' | 'prev' | 'next', page: number }>;
+  @Input() nzPageSizeOptions = [10, 20, 30, 40];
+  @Input() @ViewChild('renderItemTemplate') nzItemRender: TemplateRef<{
+    $implicit: 'page' | 'prev' | 'next';
+    page: number;
+  }>;
   @Input() @InputBoolean() nzShowSizeChanger = false;
   @Input() @InputBoolean() nzHideOnSinglePage = false;
   @Input() @InputBoolean() nzShowQuickJumper = false;
@@ -140,20 +152,17 @@ export class NzPaginationComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   get ranges(): number[] {
-    return [ (this.nzPageIndex - 1) * this.nzPageSize + 1, Math.min(this.nzPageIndex * this.nzPageSize, this.nzTotal) ];
+    return [(this.nzPageIndex - 1) * this.nzPageSize + 1, Math.min(this.nzPageIndex * this.nzPageSize, this.nzTotal)];
   }
 
   get showAddOption(): boolean {
     return this.nzPageSizeOptions.indexOf(this.nzPageSize) === -1;
   }
 
-  constructor(private i18n: NzI18nService, private cdr: ChangeDetectorRef) {
-  }
+  constructor(private i18n: NzI18nService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.i18n.localeChange.pipe(
-      takeUntil(this.$destroy)
-    ).subscribe(() => {
+    this.i18n.localeChange.pipe(takeUntil(this.$destroy)).subscribe(() => {
       this.locale = this.i18n.getLocaleData('Pagination');
       this.cdr.markForCheck();
     });

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   forwardRef,
@@ -10,7 +18,8 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { InputBoolean } from '../core/util/convert';
+
+import { InputBoolean } from 'ng-zorro-antd/core';
 
 export interface NzCheckBoxOptionInterface {
   label: string;
@@ -20,15 +29,16 @@ export interface NzCheckBoxOptionInterface {
 }
 
 @Component({
-  selector           : 'nz-checkbox-group',
+  selector: 'nz-checkbox-group',
+  exportAs: 'nzCheckboxGroup',
   preserveWhitespaces: false,
-  encapsulation      : ViewEncapsulation.None,
-  templateUrl        : './nz-checkbox-group.component.html',
-  providers          : [
+  encapsulation: ViewEncapsulation.None,
+  templateUrl: './nz-checkbox-group.component.html',
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => NzCheckboxGroupComponent),
-      multi      : true
+      multi: true
     }
   ]
 })
@@ -48,7 +58,12 @@ export class NzCheckboxGroupComponent implements ControlValueAccessor, OnInit {
     return option.value;
   }
 
-  constructor(private elementRef: ElementRef, private focusMonitor: FocusMonitor, private cdr: ChangeDetectorRef, renderer: Renderer2) {
+  constructor(
+    private elementRef: ElementRef,
+    private focusMonitor: FocusMonitor,
+    private cdr: ChangeDetectorRef,
+    renderer: Renderer2
+  ) {
     renderer.addClass(elementRef.nativeElement, 'ant-checkbox-group');
   }
 

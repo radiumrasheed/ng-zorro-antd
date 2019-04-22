@@ -13,6 +13,14 @@ Any data whose entries are defined in a hierarchical manner is fit to use this c
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzTreeSelectModule } from 'ng-zorro-antd';
+```
+
 ### nz-tree-select
 
 | Property | Description | Type | Default |

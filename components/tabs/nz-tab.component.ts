@@ -1,10 +1,22 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   ChangeDetectionStrategy,
-  Component, ContentChild, ElementRef,
+  Component,
+  ContentChild,
+  ElementRef,
   EventEmitter,
   Input,
-  OnChanges, OnDestroy,
-  Output, Renderer2,
+  OnChanges,
+  OnDestroy,
+  Output,
+  Renderer2,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -12,15 +24,16 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { InputBoolean } from '../core/util/convert';
+import { InputBoolean } from 'ng-zorro-antd/core';
 import { NzTabDirective } from './nz-tab.directive';
 
 @Component({
-  selector           : 'nz-tab',
+  selector: 'nz-tab',
+  exportAs: 'nzTab',
   preserveWhitespaces: false,
-  encapsulation      : ViewEncapsulation.None,
-  changeDetection    : ChangeDetectionStrategy.OnPush,
-  templateUrl        : './nz-tab.component.html'
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './nz-tab.component.html'
 })
 export class NzTabComponent implements OnChanges, OnDestroy {
   position: number | null = null;

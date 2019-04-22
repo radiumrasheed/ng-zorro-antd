@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   forwardRef,
@@ -19,24 +27,26 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isEmpty } from '../core/util/check';
-import { InputBoolean } from '../core/util/convert';
+
+import { isEmpty, InputBoolean } from 'ng-zorro-antd/core';
+
 import { NzCheckboxWrapperComponent } from './nz-checkbox-wrapper.component';
 
 @Component({
-  selector           : '[nz-checkbox]',
+  selector: '[nz-checkbox]',
+  exportAs: 'nzCheckbox',
   preserveWhitespaces: false,
-  changeDetection    : ChangeDetectionStrategy.OnPush,
-  encapsulation      : ViewEncapsulation.None,
-  templateUrl        : './nz-checkbox.component.html',
-  providers          : [
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  templateUrl: './nz-checkbox.component.html',
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => NzCheckboxComponent),
-      multi      : true
+      multi: true
     }
   ],
-  host               : {
+  host: {
     '(click)': 'hostClick($event)'
   }
 })
@@ -113,7 +123,13 @@ export class NzCheckboxComponent implements OnInit, ControlValueAccessor, OnChan
     }
   }
 
-  constructor(private elementRef: ElementRef<HTMLElement>, private renderer: Renderer2, @Optional() private nzCheckboxWrapperComponent: NzCheckboxWrapperComponent, private cdr: ChangeDetectorRef, private focusMonitor: FocusMonitor) {
+  constructor(
+    private elementRef: ElementRef<HTMLElement>,
+    private renderer: Renderer2,
+    @Optional() private nzCheckboxWrapperComponent: NzCheckboxWrapperComponent,
+    private cdr: ChangeDetectorRef,
+    private focusMonitor: FocusMonitor
+  ) {
     renderer.addClass(elementRef.nativeElement, 'ant-checkbox-wrapper');
   }
 

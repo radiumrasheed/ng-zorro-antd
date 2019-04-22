@@ -1,7 +1,7 @@
 ---
 category: Components
 subtitle: 标签页
-type: Data Display
+type: 数据展示
 title: Tabs
 cols: 1
 ---
@@ -19,6 +19,14 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 - [RadioButton](/components/radio/zh/#components-radio-demo-radiobutton) 可作为更次级的页签来使用。
 
 ## API
+
+### 单独引入此组件
+
+想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
+
+```ts
+import { NzTabsModule } from 'ng-zorro-antd';
+```
 
 ### nz-tabset
 

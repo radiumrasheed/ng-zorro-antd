@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   AfterViewInit,
   Directive,
@@ -15,8 +23,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Platform } from '@angular/cdk/platform';
 import { fromEvent, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
-import { NzUpdateHostClassService } from '../core/services/update-host-class.service';
-import { IndexableObject } from '../core/types/indexable';
+
+import { IndexableObject, NzUpdateHostClassService } from 'ng-zorro-antd/core';
 
 export type NzJustify = 'start' | 'end' | 'center' | 'space-around' | 'space-between';
 export type NzAlign = 'top' | 'middle' | 'bottom';
@@ -34,17 +42,18 @@ export enum Breakpoint {
 export type BreakpointMap = { [index in keyof typeof Breakpoint]: string };
 
 const responsiveMap: BreakpointMap = {
-  xs : '(max-width: 575px)',
-  sm : '(min-width: 576px)',
-  md : '(min-width: 768px)',
-  lg : '(min-width: 992px)',
-  xl : '(min-width: 1200px)',
+  xs: '(max-width: 575px)',
+  sm: '(min-width: 576px)',
+  md: '(min-width: 768px)',
+  lg: '(min-width: 992px)',
+  xl: '(min-width: 1200px)',
   xxl: '(min-width: 1600px)'
 };
 
 @Directive({
-  selector : '[nz-row],nz-row',
-  providers: [ NzUpdateHostClassService ]
+  selector: '[nz-row],nz-row',
+  exportAs: 'nzRow',
+  providers: [NzUpdateHostClassService]
 })
 export class NzRowDirective implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() nzType: NzType;
@@ -61,8 +70,8 @@ export class NzRowDirective implements OnInit, OnChanges, AfterViewInit, OnDestr
   calculateGutter(): number {
     if (typeof this.nzGutter !== 'object') {
       return this.nzGutter;
-    } else if (this.breakPoint && this.nzGutter[ this.breakPoint ]) {
-      return this.nzGutter[ this.breakPoint ];
+    } else if (this.breakPoint && this.nzGutter[this.breakPoint]) {
+      return this.nzGutter[this.breakPoint];
     } else {
       return 0;
     }
@@ -81,7 +90,7 @@ export class NzRowDirective implements OnInit, OnChanges, AfterViewInit, OnDestr
   watchMedia(): void {
     // @ts-ignore
     Object.keys(responsiveMap).map((screen: Breakpoint) => {
-      const matchBelow = this.mediaMatcher.matchMedia(responsiveMap[ screen ]).matches;
+      const matchBelow = this.mediaMatcher.matchMedia(responsiveMap[screen]).matches;
       if (matchBelow) {
         this.breakPoint = screen;
       }
@@ -92,16 +101,22 @@ export class NzRowDirective implements OnInit, OnChanges, AfterViewInit, OnDestr
   /** temp solution since no method add classMap to host https://github.com/angular/angular/issues/7289*/
   setClassMap(): void {
     const classMap = {
-      [ `${this.prefixCls}` ]                                 : !this.nzType,
-      [ `${this.prefixCls}-${this.nzType}` ]                  : this.nzType,
-      [ `${this.prefixCls}-${this.nzType}-${this.nzAlign}` ]  : this.nzType && this.nzAlign,
-      [ `${this.prefixCls}-${this.nzType}-${this.nzJustify}` ]: this.nzType && this.nzJustify
+      [`${this.prefixCls}`]: !this.nzType,
+      [`${this.prefixCls}-${this.nzType}`]: this.nzType,
+      [`${this.prefixCls}-${this.nzType}-${this.nzAlign}`]: this.nzType && this.nzAlign,
+      [`${this.prefixCls}-${this.nzType}-${this.nzJustify}`]: this.nzType && this.nzJustify
     };
     this.nzUpdateHostClassService.updateHostClass(this.el, classMap);
   }
 
-  constructor(public elementRef: ElementRef, public renderer: Renderer2, public nzUpdateHostClassService: NzUpdateHostClassService, public mediaMatcher: MediaMatcher, public ngZone: NgZone, public platform: Platform) {
-  }
+  constructor(
+    public elementRef: ElementRef,
+    public renderer: Renderer2,
+    public nzUpdateHostClassService: NzUpdateHostClassService,
+    public mediaMatcher: MediaMatcher,
+    public ngZone: NgZone,
+    public platform: Platform
+  ) {}
 
   ngOnInit(): void {
     this.setClassMap();
@@ -121,8 +136,11 @@ export class NzRowDirective implements OnInit, OnChanges, AfterViewInit, OnDestr
     if (this.platform.isBrowser) {
       this.ngZone.runOutsideAngular(() => {
         fromEvent(window, 'resize')
-        .pipe(auditTime(16), takeUntil(this.destroy$))
-        .subscribe(() => this.watchMedia());
+          .pipe(
+            auditTime(16),
+            takeUntil(this.destroy$)
+          )
+          .subscribe(() => this.watchMedia());
       });
     }
   }

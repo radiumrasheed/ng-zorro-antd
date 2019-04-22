@@ -1,18 +1,9 @@
-import {
-  Component,
-  DebugElement,
-  ViewChild
-} from '@angular/core';
-import {
-  fakeAsync,
-  tick,
-  ComponentFixture,
-  TestBed
-} from '@angular/core/testing';
+import { Component, DebugElement, ViewChild } from '@angular/core';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { NzScrollService } from '../core/scroll/nz-scroll.service';
+import { NzScrollService } from 'ng-zorro-antd/core';
 
 import { NzBackTopComponent } from './nz-back-top.component';
 import { NzBackTopModule } from './nz-back-top.module';
@@ -42,10 +33,7 @@ describe('Component:nz-back-top', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        NzBackTopModule,
-        NoopAnimationsModule
-      ],
+      imports: [NzBackTopModule, NoopAnimationsModule],
       declarations: [TestBackTopComponent, TestBackTopTemplateComponent],
       providers: [
         {
@@ -209,9 +197,9 @@ describe('Component:nz-back-top', () => {
 
 @Component({
   template: `
-  <nz-back-top></nz-back-top>
-  <div id="fakeTarget"></div>
-`
+    <nz-back-top></nz-back-top>
+    <div id="fakeTarget"></div>
+  `
 })
 class TestBackTopComponent {
   @ViewChild(NzBackTopComponent)
@@ -221,12 +209,12 @@ class TestBackTopComponent {
 @Component({
   template: `
     my comp
-  <nz-back-top [nzTemplate]="tpl">
-    <ng-template #tpl>
-      <div class="this-is-my-template"></div>
-    </ng-template>
-  </nz-back-top>
-`
+    <nz-back-top [nzTemplate]="tpl">
+      <ng-template #tpl>
+        <div class="this-is-my-template"></div>
+      </ng-template>
+    </nz-back-top>
+  `
 })
 class TestBackTopTemplateComponent {
   @ViewChild(NzBackTopComponent)
@@ -240,10 +228,7 @@ class MockNzScrollService {
     return this.mockTopOffset;
   }
 
-  scrollTo(
-    _containerEl: Element | Window,
-    targetTopValue: number = 0
-  ): void {
+  scrollTo(_containerEl: Element | Window, targetTopValue: number = 0): void {
     this.mockTopOffset = targetTopValue;
   }
 }

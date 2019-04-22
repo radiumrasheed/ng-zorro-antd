@@ -1,6 +1,6 @@
 ---
 category: Components
-type: Data Entry
+type: 数据录入
 title: Autocomplete
 subtitle: 自动完成
 ---
@@ -25,6 +25,14 @@ subtitle: 自动完成
   <nz-auto-option [nzValue]="'23456'">23456</nz-auto-option>
   <nz-auto-option [nzValue]="'34567'">34567</nz-auto-option>
 </nz-autocomplete>
+```
+
+### 单独引入此组件
+
+想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
+
+```ts
+import { NzAutocompleteModule } from 'ng-zorro-antd';
 ```
 
 ### [nzAutocomplete]

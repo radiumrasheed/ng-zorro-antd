@@ -29,6 +29,14 @@ The default global configuration is:
 
 ## API
 
+### Import this Component Individually
+
+You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
+
+```ts
+import { NzMessageModule } from 'ng-zorro-antd';
+```
+
 ### NzMessageService
 
 This components provides some service methods, with usage and arguments as following:
@@ -41,7 +49,7 @@ This components provides some service methods, with usage and arguments as follo
 
 | Argument | Description | Type | Default |
 | -------- | ----------- | ---- | ------- |
-| content | The content of message | `string` | - |
+| content | The content of message | `string｜TemplateRef<void>` | - |
 | options | Support setting the parameters for the current message box, see the table below | `object` | - |
 
 The parameters that are set by the `options` support are as follows:
@@ -64,6 +72,7 @@ Methods for destruction are also provided:
 | nzMaxStack | The maximum number of messages that can be displayed at the same time | `number` | `8` |
 | nzPauseOnHover | Do not remove automatically when mouse is over while setting to `true` | `boolean` | `true` |
 | nzAnimate | Whether to turn on animation | `boolean` | `true` |
+| nzTop | Distance from top | `number｜string` | `24` |
 
 ### NzMessageDataFilled
 
