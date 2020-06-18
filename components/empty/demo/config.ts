@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { NzEmptyService } from 'ng-zorro-antd';
+import { NzConfigService } from 'ng-zorro-antd/core/config';
 
 @Component({
   selector: 'nz-demo-empty-config',
@@ -27,13 +27,14 @@ import { NzEmptyService } from 'ng-zorro-antd';
     <nz-transfer></nz-transfer>
 
     <h3>Table</h3>
-    <nz-table>
+    <nz-table [nzData]="[]">
       <thead>
         <tr>
           <th>Title</th>
           <th>Age</th>
         </tr>
       </thead>
+      <tbody></tbody>
     </nz-table>
 
     <h3>List</h3>
@@ -41,7 +42,7 @@ import { NzEmptyService } from 'ng-zorro-antd';
 
     <ng-template #customTpl let-name>
       <div style="text-align: center;">
-        <i nz-icon type="smile" style="font-size: 20px;"></i>
+        <i nz-icon nzType="smile" style="font-size: 20px;"></i>
         <p>Data Not Found in {{ name }}</p>
       </div>
     </ng-template>
@@ -56,17 +57,17 @@ import { NzEmptyService } from 'ng-zorro-antd';
   ]
 })
 export class NzDemoEmptyConfigComponent {
-  @ViewChild('customTpl') customTpl: TemplateRef<any>; // tslint:disable-line:no-any
+  @ViewChild('customTpl', { static: false }) customTpl?: TemplateRef<any>; // tslint:disable-line:no-any
 
   customize = false;
 
-  constructor(private nzEmptyService: NzEmptyService) {}
+  constructor(private nzConfigService: NzConfigService) {}
 
   onConfigChange(): void {
     if (this.customize) {
-      this.nzEmptyService.setDefaultContent(this.customTpl); // tslint:disable-line:no-any
+      this.nzConfigService.set('empty', { nzDefaultEmptyContent: this.customTpl });
     } else {
-      this.nzEmptyService.resetDefault();
+      this.nzConfigService.set('empty', { nzDefaultEmptyContent: undefined });
     }
   }
 }

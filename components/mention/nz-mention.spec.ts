@@ -3,25 +3,19 @@ import { DOWN_ARROW, ENTER, ESCAPE, RIGHT_ARROW, TAB, UP_ARROW } from '@angular/
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Component, NgZone, ViewChild } from '@angular/core';
-import { async, fakeAsync, flush, inject, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 
-import {
-  createKeyboardEvent,
-  dispatchFakeEvent,
-  dispatchKeyboardEvent,
-  typeInElement,
-  MockNgZone
-} from 'ng-zorro-antd/core';
-import { NzIconTestModule } from '../icon/nz-icon-test.module';
+import { createKeyboardEvent, dispatchFakeEvent, dispatchKeyboardEvent, MockNgZone, typeInElement } from 'ng-zorro-antd/core/testing';
+import { NzIconTestModule } from 'ng-zorro-antd/icon/testing';
 
 import { NzInputModule } from '../input';
-import { NzMentionTriggerDirective } from './nz-mention-trigger';
-import { NzMentionComponent } from './nz-mention.component';
-import { NzMentionModule } from './nz-mention.module';
+import { NzMentionTriggerDirective } from './mention-trigger';
+import { NzMentionComponent } from './mention.component';
+import { NzMentionModule } from './mention.module';
 
 describe('mention', () => {
   let overlayContainer: OverlayContainer;
@@ -32,14 +26,7 @@ describe('mention', () => {
   beforeEach(async(() => {
     const dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [
-        NzMentionModule,
-        NzInputModule,
-        NoopAnimationsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NzIconTestModule
-      ],
+      imports: [NzMentionModule, NzInputModule, NoopAnimationsModule, FormsModule, ReactiveFormsModule, NzIconTestModule],
       declarations: [NzTestSimpleMentionComponent, NzTestPropertyMentionComponent],
       providers: [
         { provide: Directionality, useFactory: () => ({ value: dir }) },
@@ -154,6 +141,32 @@ describe('mention', () => {
       expect(overlayContainerElement.textContent).toEqual('');
       expect(textarea.value).toEqual('@angular ');
     }));
+
+    it('should support switch trigger', fakeAsync(() => {
+      fixture.componentInstance.inputTrigger = true;
+      fixture.detectChanges();
+      const input = fixture.debugElement.query(By.css('input')).nativeElement;
+      const mention = fixture.componentInstance.mention;
+
+      expect(fixture.debugElement.query(By.css('textarea'))).toBeFalsy();
+      expect(input).toBeTruthy();
+
+      input.value = '@a';
+      fixture.detectChanges();
+      dispatchFakeEvent(input, 'click');
+      fixture.detectChanges();
+      flush();
+
+      expect(mention.isOpen).toBe(true);
+
+      const option = overlayContainerElement.querySelector('.ant-mention-dropdown-item') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+
+      tick(500);
+      expect(mention.isOpen).toBe(false);
+      expect(overlayContainerElement.textContent).toEqual('');
+    }));
   });
 
   describe('keyboard events', () => {
@@ -187,9 +200,7 @@ describe('mention', () => {
       fixture.detectChanges();
 
       const mention = fixture.componentInstance.mention;
-      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<
-        HTMLElement
-      >;
+      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<HTMLElement>;
 
       expect(mention.isOpen).toBe(true);
       fixture.componentInstance.trigger.onKeydown.emit(DOWN_ARROW_EVENT);
@@ -205,9 +216,7 @@ describe('mention', () => {
       dispatchFakeEvent(textarea, 'click');
       fixture.detectChanges();
       const mention = fixture.componentInstance.mention;
-      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<
-        HTMLElement
-      >;
+      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<HTMLElement>;
 
       expect(mention.isOpen).toBe(true);
 
@@ -225,9 +234,7 @@ describe('mention', () => {
       dispatchFakeEvent(textarea, 'click');
       fixture.detectChanges();
       const mention = fixture.componentInstance.mention;
-      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<
-        HTMLElement
-      >;
+      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<HTMLElement>;
 
       expect(mention.isOpen).toBe(true);
 
@@ -244,9 +251,7 @@ describe('mention', () => {
       dispatchFakeEvent(textarea, 'click');
       fixture.detectChanges();
       const mention = fixture.componentInstance.mention;
-      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<
-        HTMLElement
-      >;
+      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<HTMLElement>;
 
       expect(mention.isOpen).toBe(true);
 
@@ -266,9 +271,7 @@ describe('mention', () => {
       componentInstance.trigger.onKeydown.emit(DOWN_ARROW_EVENT);
       fixture.detectChanges();
 
-      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<
-        HTMLElement
-      >;
+      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<HTMLElement>;
 
       expect(optionEls[0].classList).not.toContain('focus');
       expect(optionEls[1].classList).toContain('focus');
@@ -284,9 +287,7 @@ describe('mention', () => {
       [1, 2, 3, 4].forEach(() => componentInstance.trigger.onKeydown.emit(RIGHT_EVENT));
       fixture.detectChanges();
 
-      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<
-        HTMLElement
-      >;
+      const optionEls = overlayContainerElement.querySelectorAll('.ant-mention-dropdown-item') as NodeListOf<HTMLElement>;
 
       expect(optionEls[0].classList).toContain('focus');
       expect(optionEls[1].classList).not.toContain('focus');
@@ -319,7 +320,9 @@ describe('mention', () => {
       flush();
 
       fixture.componentInstance.trigger.onKeydown.emit(ENTER_EVENT);
+      // TODO: ivy fix
       expect(ENTER_EVENT.defaultPrevented).toBe(true);
+      // expect(false).toBe(true);
     }));
 
     it('should not prevent the default enter action for a closed dropdown', () => {
@@ -328,7 +331,9 @@ describe('mention', () => {
       dispatchFakeEvent(textarea, 'click');
       fixture.detectChanges();
       fixture.componentInstance.trigger.onKeydown.emit(ENTER_EVENT);
+      // TODO: ivy fix
       expect(ENTER_EVENT.defaultPrevented).toBe(false);
+      // expect(true).toBe(false);
     });
 
     it('should close the dropdown when tabbing', fakeAsync(() => {
@@ -421,10 +426,7 @@ describe('mention', () => {
 
     it('should correct parsing the trigger content', () => {
       fixture.componentInstance.setArrayPrefix();
-      typeInElement(
-        'ABC @Angular 123 @ant-design @你好 foo ant@gmail.com @@ng 123 .@.@ /@hello \\@hello #ng',
-        textarea
-      );
+      typeInElement('ABC @Angular 123 @ant-design @你好 foo ant@gmail.com @@ng 123 .@.@ /@hello \\@hello #ng', textarea);
       fixture.detectChanges();
       expect(fixture.componentInstance.mention.getMentions().join(',')).toBe('@Angular,@ant-design,@你好,@@ng,#ng');
     });
@@ -434,29 +436,24 @@ describe('mention', () => {
 @Component({
   template: `
     <nz-mention [nzSuggestions]="suggestions">
-      <textarea nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }" [(ngModel)]="inputValue" nzMentionTrigger>
+      <textarea *ngIf="!inputTrigger" nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }" [(ngModel)]="inputValue" nzMentionTrigger>
       </textarea>
+      <input *ngIf="inputTrigger" nz-input [(ngModel)]="inputValue" nzMentionTrigger />
     </nz-mention>
   `
 })
 class NzTestSimpleMentionComponent {
   inputValue: string = '@angular';
+  inputTrigger = false;
   suggestions = ['angular', 'ant-design', 'mention', '中文', 'にほんご'];
-  @ViewChild(NzMentionComponent) mention: NzMentionComponent;
-  @ViewChild(NzMentionTriggerDirective) trigger: NzMentionTriggerDirective;
+  @ViewChild(NzMentionComponent, { static: false }) mention!: NzMentionComponent;
+  @ViewChild(NzMentionTriggerDirective, { static: false }) trigger!: NzMentionTriggerDirective;
 }
 
 @Component({
   template: `
-    <nz-mention
-      [nzSuggestions]="webFrameworks"
-      [nzValueWith]="valueWith"
-      [nzPrefix]="prefix"
-      [nzPlacement]="'top'"
-      [nzLoading]="loading"
-    >
-      <textarea nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }" [(ngModel)]="inputValue" nzMentionTrigger>
-      </textarea>
+    <nz-mention [nzSuggestions]="webFrameworks" [nzValueWith]="valueWith" [nzPrefix]="prefix" [nzPlacement]="'top'" [nzLoading]="loading">
+      <textarea nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }" [(ngModel)]="inputValue" nzMentionTrigger> </textarea>
       <ng-container *nzMentionSuggestion="let framework">
         <span class="custom">{{ framework.name }} - {{ framework.type }}</span>
       </ng-container>
@@ -475,8 +472,8 @@ class NzTestPropertyMentionComponent {
   loading = false;
   prefix: string | string[] = '@';
   valueWith = (data: { name: string; type: string }) => data.name;
-  @ViewChild(NzMentionComponent) mention: NzMentionComponent;
-  @ViewChild(NzMentionTriggerDirective) trigger: NzMentionTriggerDirective;
+  @ViewChild(NzMentionComponent, { static: false }) mention!: NzMentionComponent;
+  @ViewChild(NzMentionTriggerDirective, { static: false }) trigger!: NzMentionTriggerDirective;
 
   setArrayPrefix(): void {
     this.prefix = ['@', '#'];

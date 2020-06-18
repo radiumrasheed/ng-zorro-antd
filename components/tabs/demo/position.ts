@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NzTabPosition } from 'ng-zorro-antd/tabs';
 
 @Component({
   selector: 'nz-demo-tabs-position',
@@ -12,11 +13,10 @@ import { Component } from '@angular/core';
     <nz-tabset [nzTabPosition]="position" [nzType]="'line'">
       <nz-tab *ngFor="let tab of tabs" [nzTitle]="'Tab ' + tab"> Content of tab {{ tab }} </nz-tab>
     </nz-tabset>
-  `,
-  styles: []
+  `
 })
 export class NzDemoTabsPositionComponent {
-  position = 'top';
+  position: NzTabPosition = 'top';
   tabs = [1, 2, 3];
   options = [
     { value: 'top', label: 'top' },

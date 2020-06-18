@@ -2,10 +2,10 @@ import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { NzIconTestModule } from '../icon/nz-icon-test.module';
+import { NzIconTestModule } from 'ng-zorro-antd/icon/testing';
 
-import { NzListComponent } from './nz-list.component';
-import { NzListModule } from './nz-list.module';
+import { NzListComponent } from './list.component';
+import { NzListModule } from './list.module';
 
 describe('list', () => {
   let fixture: ComponentFixture<TestListComponent>;
@@ -24,7 +24,10 @@ describe('list', () => {
 
   describe('[fields]', () => {
     describe('#nzItemLayout', () => {
-      for (const item of [{ type: 'default', ret: false }, { type: 'vertical', ret: true }]) {
+      for (const item of [
+        { type: 'default', ret: false },
+        { type: 'vertical', ret: true }
+      ]) {
         it(`[${item.type}]`, () => {
           context.nzItemLayout = item.type;
           fixture.detectChanges();
@@ -62,15 +65,13 @@ describe('list', () => {
         const fixtureTemp = TestBed.createComponent(TestListWithTemplateComponent);
         fixtureTemp.detectChanges();
         const footerEl = fixtureTemp.debugElement.query(By.css('.ant-list-footer'));
-        expect((footerEl.nativeElement as HTMLDivElement).innerText).toBe(fixtureTemp.componentInstance
-          .footer as string);
+        expect((footerEl.nativeElement as HTMLDivElement).innerText).toBe(fixtureTemp.componentInstance.footer as string);
       });
       it('change string to template', () => {
         const fixtureTemp = TestBed.createComponent(TestListWithTemplateComponent);
         fixtureTemp.detectChanges();
         const footerEl = fixtureTemp.debugElement.query(By.css('.ant-list-footer'));
-        expect((footerEl.nativeElement as HTMLDivElement).innerText).toBe(fixtureTemp.componentInstance
-          .footer as string);
+        expect((footerEl.nativeElement as HTMLDivElement).innerText).toBe(fixtureTemp.componentInstance.footer as string);
         (fixtureTemp.debugElement.query(By.css('#change')).nativeElement as HTMLButtonElement).click();
         fixtureTemp.detectChanges();
         expect(fixtureTemp.debugElement.query(By.css('.list-footer')) != null).toBe(true);
@@ -149,6 +150,13 @@ describe('list', () => {
     it('#pagination', () => {
       expect(dl.query(By.css('.pagination')) != null).toBe(true);
     });
+
+    it('should be use split main and extra when item layout is vertical', () => {
+      context.nzItemLayout = 'vertical';
+      fixture.detectChanges();
+      expect(dl.query(By.css('.ant-list-item-main')) != null).toBe(true);
+      expect(dl.query(By.css('.ant-list-item-extra')) != null).toBe(true);
+    });
   });
 
   describe('item', () => {
@@ -158,14 +166,22 @@ describe('list', () => {
       fixtureTemp.detectChanges();
     });
     it('with string', () => {
-      expect(fixtureTemp.debugElement.query(By.css('#item-string .ant-list-item-content')) != null).toBe(true);
+      expect(
+        (fixtureTemp.debugElement.query(By.css('#item-string .ant-list-item')).nativeElement as HTMLElement).textContent!.includes(
+          'content'
+        )
+      ).toBe(true);
       expect(fixtureTemp.debugElement.query(By.css('#item-string .ant-list-item-action')) != null).toBe(true);
-      expect(fixtureTemp.debugElement.query(By.css('#item-string .ant-list-item-extra')) != null).toBe(true);
+      expect(fixtureTemp.debugElement.query(By.css('#item-string .extra-logo')) != null).toBe(true);
     });
     it('with custom template of [nzContent]', () => {
-      expect(
-        fixtureTemp.debugElement.query(By.css('#item-template .ant-list-item-content .item-content')) != null
-      ).toBe(true);
+      expect(fixtureTemp.debugElement.query(By.css('#item-template .item-content')) != null).toBe(true);
+    });
+    it('#nzNoFlex', () => {
+      expect(fixtureTemp.debugElement.query(By.css('#item-string .ant-list-item-no-flex')) != null).toBe(false);
+      fixtureTemp.componentInstance.noFlex = true;
+      fixtureTemp.detectChanges();
+      expect(fixtureTemp.debugElement.query(By.css('#item-string .ant-list-item-no-flex')) != null).toBe(true);
     });
   });
 
@@ -206,7 +222,7 @@ describe('list', () => {
       [nzPagination]="pagination"
     >
       <ng-template #item let-item>
-        <nz-list-item>
+        <nz-list-item [nzExtra]="extra">
           <nz-list-item-meta
             nzTitle="title"
             nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
@@ -221,11 +237,14 @@ describe('list', () => {
       <ng-template #pagination>
         <div class="pagination">pagination</div>
       </ng-template>
+      <ng-template #extra>
+        <span class="extra-content">extra content</span>
+      </ng-template>
     </nz-list>
   `
 })
 class TestListComponent {
-  @ViewChild('comp') comp: NzListComponent;
+  @ViewChild('comp', { static: false }) comp!: NzListComponent;
   nzItemLayout = 'horizontal';
   nzBordered = false;
   nzFooter = 'footer';
@@ -253,7 +272,7 @@ class TestListComponent {
   `
 })
 class TestListWithTemplateComponent {
-  @ViewChild('nzFooter') nzFooter: TemplateRef<void>;
+  @ViewChild('nzFooter', { static: false }) nzFooter!: TemplateRef<void>;
 
   footer: string | TemplateRef<void> = 'footer with string';
 }
@@ -261,10 +280,10 @@ class TestListWithTemplateComponent {
 @Component({
   template: `
     <nz-list id="item-string">
-      <nz-list-item [nzContent]="'content'" [nzActions]="[action]" [nzExtra]="extra">
-        <ng-template #action><i nz-icon type="star-o" style="margin-right: 8px;"></i> 156</ng-template>
+      <nz-list-item [nzContent]="'content'" [nzActions]="[action]" [nzExtra]="extra" [nzNoFlex]="noFlex">
+        <ng-template #action><i nz-icon nzType="star-o" style="margin-right: 8px;"></i> 156</ng-template>
         <ng-template #extra>
-          <img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />
+          <img width="272" class="extra-logo" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />
         </ng-template>
         <nz-list-item-meta
           nzTitle="title"
@@ -286,4 +305,6 @@ class TestListWithTemplateComponent {
     </nz-list>
   `
 })
-class TestListItemComponent {}
+class TestListItemComponent {
+  noFlex = false;
+}

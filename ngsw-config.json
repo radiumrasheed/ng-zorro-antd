@@ -18,16 +18,18 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**"
+          "/assets/**",
+          "!/assets/codes/**"
         ]
       }
     }
   ],
   "navigationUrls": [
     "/**",
+    "!/assets/codes/**",
     "!/**/*.*",
     "!/**/*__*",
     "!/**/*__*/**",
-    "!/**/(version|issue-helper|iframe)/**"
+    "!/**/(version|issue-helper|iframe|blog)/**"
   ]
 }

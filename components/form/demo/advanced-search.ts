@@ -6,27 +6,22 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
   template: `
     <form nz-form [formGroup]="validateForm" class="ant-advanced-search-form">
       <div nz-row [nzGutter]="24">
-        <div nz-col [nzSpan]="8" *ngFor="let control of controlArray" [style.display]="control.show ? 'block' : 'none'">
-          <nz-form-item nzFlex>
+        <div nz-col [nzSpan]="8" *ngFor="let control of controlArray" [hidden]="!control.show">
+          <nz-form-item>
             <nz-form-label [nzFor]="'field' + control.index">Field {{ control.index }}</nz-form-label>
             <nz-form-control>
-              <input
-                nz-input
-                placeholder="placeholder"
-                [formControlName]="'field' + control.index"
-                [attr.id]="'field' + control.index"
-              />
+              <input nz-input placeholder="placeholder" [formControlName]="'field' + control.index" [attr.id]="'field' + control.index" />
             </nz-form-control>
           </nz-form-item>
         </div>
       </div>
       <div nz-row>
-        <div nz-col [nzSpan]="24" style="text-align: right;">
+        <div nz-col [nzSpan]="24" class="search-area">
           <button nz-button [nzType]="'primary'">Search</button>
           <button nz-button (click)="resetForm()">Clear</button>
-          <a style="margin-left:8px;font-size:12px;" (click)="toggleCollapse()">
+          <a class="collapse" (click)="toggleCollapse()">
             Collapse
-            <i nz-icon [type]="isCollapse ? 'down' : 'up'"></i>
+            <i nz-icon [nzType]="isCollapse ? 'down' : 'up'"></i>
           </a>
         </div>
       </div>
@@ -62,12 +57,21 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
       button {
         margin-left: 8px;
       }
+
+      .collapse {
+        margin-left: 8px;
+        font-size: 12px;
+      }
+
+      .search-area {
+        text-align: right;
+      }
     `
   ]
 })
 export class NzDemoFormAdvancedSearchComponent implements OnInit {
-  validateForm: FormGroup;
-  controlArray: any[] = [];
+  validateForm!: FormGroup;
+  controlArray: Array<{ index: number; show: boolean }> = [];
   isCollapse = true;
 
   toggleCollapse(): void {

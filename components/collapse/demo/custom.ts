@@ -10,17 +10,16 @@ import { Component } from '@angular/core';
         [nzHeader]="panel.name"
         [nzActive]="panel.active"
         [ngStyle]="panel.customStyle"
-        [nzExpandedIcon]="!isFirst && (panel.icon || expandedIcon)"
+        [nzExpandedIcon]="!isFirst ? panel.icon || expandedIcon : undefined"
       >
         <p>{{ panel.name }} content</p>
         <ng-template #expandedIcon let-active>
           {{ active }}
-          <i nz-icon type="caret-right" class="ant-collapse-arrow" [nzRotate]="p.nzActive ? 90 : -90"></i>
+          <i nz-icon nzType="caret-right" class="ant-collapse-arrow" [nzRotate]="p.nzActive ? 90 : -90"></i>
         </ng-template>
       </nz-collapse-panel>
     </nz-collapse>
-  `,
-  styles: []
+  `
 })
 export class NzDemoCollapseCustomComponent {
   panels = [

@@ -1,6 +1,12 @@
-import { coerceBooleanProperty, coerceCssPixelValue, _isNumberValue } from '@angular/cdk/coercion';
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
 
-import { FunctionProp } from '../types/common-wrap';
+import { _isNumberValue, coerceBooleanProperty, coerceCssPixelValue } from '@angular/cdk/coercion';
+
+import { warn } from 'ng-zorro-antd/core/logger';
+import { FunctionProp, NzSafeAny } from 'ng-zorro-antd/core/types';
 
 export function toBoolean(value: boolean | string): boolean {
   return coerceBooleanProperty(value);
@@ -16,22 +22,21 @@ export function toCssPixel(value: number | string): string {
   return coerceCssPixelValue(value);
 }
 
+// tslint:disable no-invalid-this
+
 /**
  * Get the function-property type's value
  */
-// tslint:disable-next-line: no-any
-export function valueFunctionProp<T>(prop: FunctionProp<T>, ...args: any[]): T {
-  return typeof prop === 'function' ? prop(...args) : prop;
+export function valueFunctionProp<T>(prop: FunctionProp<T> | T, ...args: NzSafeAny[]): T {
+  return typeof prop === 'function' ? (prop as FunctionProp<T>)(...args) : prop;
 }
 
-// tslint:disable-next-line: no-any
-function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (target: any, propName: string) => void {
-  // tslint:disable-next-line: no-any
-  function propDecorator(target: any, propName: string): void {
+function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (target: NzSafeAny, propName: string) => void {
+  function propDecorator(target: NzSafeAny, propName: string, originalDescriptor?: TypedPropertyDescriptor<NzSafeAny>): NzSafeAny {
     const privatePropName = `$$__${propName}`;
 
     if (Object.prototype.hasOwnProperty.call(target, privatePropName)) {
-      console.warn(`The prop "${privatePropName}" is already exist, it will be overrided by ${name} decorator.`);
+      warn(`The prop "${privatePropName}" is already exist, it will be overrided by ${name} decorator.`);
     }
 
     Object.defineProperty(target, privatePropName, {
@@ -39,14 +44,17 @@ function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (targe
       writable: true
     });
 
-    Object.defineProperty(target, propName, {
+    return {
       get(): string {
-        return this[privatePropName]; // tslint:disable-line:no-invalid-this
+        return originalDescriptor && originalDescriptor.get ? originalDescriptor.get.bind(this)() : this[privatePropName];
       },
       set(value: T): void {
-        this[privatePropName] = fallback(value); // tslint:disable-line:no-invalid-this
+        if (originalDescriptor && originalDescriptor.set) {
+          originalDescriptor.set.bind(this)(fallback(value));
+        }
+        this[privatePropName] = fallback(value);
       }
-    });
+    };
   }
 
   return propDecorator;
@@ -68,18 +76,14 @@ function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (targe
  * // __visible = false;
  * ```
  */
-// tslint:disable-next-line: no-any
-export function InputBoolean(): any {
+export function InputBoolean(): NzSafeAny {
   return propDecoratorFactory('InputBoolean', toBoolean);
 }
 
-// tslint:disable-next-line: no-any
-export function InputCssPixel(): any {
+export function InputCssPixel(): NzSafeAny {
   return propDecoratorFactory('InputCssPixel', toCssPixel);
 }
 
-// tslint:disable-next-line: no-any
-export function InputNumber(): any {
-  // tslint:disable-line: no-any
-  return propDecoratorFactory('InputNumber', toNumber);
+export function InputNumber(fallbackValue?: NzSafeAny): NzSafeAny {
+  return propDecoratorFactory('InputNumber', (value: string | number) => toNumber(value, fallbackValue));
 }

@@ -1,5 +1,5 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
-import { NzCodeBoxComponent } from '../share/nz-codebox/nz-codebox.component';
+import { NzCodeBoxComponent } from '../share/codebox/codebox.component';
 
 @Component({
   selector     : 'nz-demo-{{component}}',
@@ -8,19 +8,21 @@ import { NzCodeBoxComponent } from '../share/nz-codebox/nz-codebox.component';
 })
 export class {{componentName}} {
   expanded = false;
-  @ViewChildren(NzCodeBoxComponent) codeBoxes: QueryList<NzCodeBoxComponent>;
+  @ViewChildren(NzCodeBoxComponent) codeBoxes!: QueryList<NzCodeBoxComponent>;
 
-  goLink(link: string) {
-    window.location.hash = link;
+  goLink(link: string): void {
+    if (window) {
+      window.location.hash = link;
+    }
   }
 
   expandAllCode(): void {
     this.expanded = !this.expanded;
     this.codeBoxes.forEach(code => {
       code.nzExpanded = this.expanded;
+      code.expandCode(this.expanded);
       code.check();
     });
   }
-{{code}}
-{{rawCode}}
+
 }

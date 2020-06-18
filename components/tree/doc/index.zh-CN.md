@@ -9,38 +9,42 @@ subtitle: 树形控件
 
 文件夹、组织架构、生物分类、国家地区等等，世间万物的大多数结构都是树形结构。使用`树控件`可以完整展现其中的层级关系，并具有展开收起选择等交互功能。
 
-## API
-
-### 单独引入此组件
-
-想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
-
 ```ts
-import { NzTreeModule } from 'ng-zorro-antd';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
 ```
+
+## API
 
 ### nz-tree
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| `[nzData]` | 元数据 | `NzTreeNodeOptions[]｜NzTreeNode[]` | `[]` |
-| `[nzBlockNode]` | 是否节点占据一行 | `boolean` | `false` |
+> 说明: 根据目前的数据结构设计，需要保证优先设置 `nzData`，否则各属性不会生效。异步操作待数据返回后，重新赋值其他各属性触发渲染(`nzExpandAll` `nzExpandedKeys` `nzCheckedKeys` `nzSelectedKeys` `nzSearchValue`)。重构优化工作请追踪 [#5152](https://github.com/NG-ZORRO/ng-zorro-antd/issues/5152)。
+
+| 参数 | 说明 | 类型 | 默认值 | 全局配置 |
+| --- | --- | --- | --- | --- |
+| `[nzData]` | 元数据 | `NzTreeNodeOptions[] \| NzTreeNode[]` | `[]` |
+| `[nzBlockNode]` | 是否节点占据一行 | `boolean` | `false` | ✅ |
 | `[nzCheckable]` | 节点前添加 Checkbox 复选框 | `boolean` | `false` |
-| `[nzShowExpand]` | 节点前添加展开图标 | `boolean` | `true` |
-| `[nzShowLine]` | 是否展示连接线 | `boolean` | `false` |
+| `[nzShowExpand]` | 节点前添加展开图标 | `boolean` | `true` | |
+| `[nzShowLine]` | 是否展示连接线 | `boolean` | `false` | |
 | `[nzExpandedIcon]` | 自定义展开图标 | `TemplateRef<{ $implicit: NzTreeNode }>` | - |
-| `[nzShowIcon]` | 是否展示 TreeNode title 前的图标，没有默认样式 | `boolean` | `false` |
+| `[nzShowIcon]` | 是否展示 TreeNode title 前的图标，没有默认样式 | `boolean` | `false` | ✅ |
 | `[nzAsyncData]` | 是否异步加载(显示加载状态) | `boolean` | `false` |
-| `[nzDraggable]` | 设置节点可拖拽（IE>8） | `boolean` | `false` |
+| `[nzDraggable]` | 设置节点可拖拽 | `boolean` | `false` |
 | `[nzMultiple]` | 支持点选多个节点（节点本身） | `boolean` | `false` |
-| `[nzHideUnMatched]` | 搜索隐藏未匹配的节点 | `boolean` | `false` |
-| `[nzCheckStrictly]` | checkable状态下节点选择完全受控（父子节点选中状态不再关联） | `boolean` | `false` |
+| `[nzHideUnMatched]` | 搜索隐藏未匹配的节点 | `boolean` | `false` | ✅ |
+| `[nzCheckStrictly]` | checkable 状态下节点选择完全受控（父子节点选中状态不再关联） | `boolean` | `false` |
+| `[nzTreeTemplate]` | 自定义节点 | `TemplateRef<{ $implicit: NzTreeNode }>` | - |
 | `[nzExpandAll]` | 默认展开所有树节点 | `boolean` | `false` |
 | `[nzExpandedKeys]` | 展开指定的树节点 | `string[]` | `[]` |
 | `[nzCheckedKeys]` | 指定选中复选框的树节点 | `string[]` | `[]` |
 | `[nzSelectedKeys]` | 指定选中的树节点 | `string[]` | `[]` |
 | `[nzSearchValue]` | 按需筛选树高亮节点(参考可搜索的树),双向绑定 | `string` | `null` |
+| `[nzSearchFunc]` | 自定义匹配方法，配合 nzSearchValue 使用 | `(node: NzTreeNodeOptions) => boolean` | `null` |
 | `[nzBeforeDrop]` | drop前二次校验,允许用户自行决定是否允许放置 | `(confirm: NzFormatBeforeDropEvent) => Observable<boolean>` | - |
+| `[nzVirtualHeight]` | 虚拟滚动的总高度 | `string` | `-` |
+| `[nzVirtualItemSize]` | 虚拟滚动时每一列的高度，与 [cdk itemSize](https://material.angular.io/cdk/scrolling/api) 相同 | `number` | `0` |
+| `[nzVirtualMaxBufferPx]` | 缓冲区最大像素高度，与 [cdk maxBufferPx](https://material.angular.io/cdk/scrolling/api) 相同 | `number` | `200` |
+| `[nzVirtualMinBufferPx]` | 缓冲区最小像素高度，低于该值时将加载新结构，与 [cdk minBufferPx](https://material.angular.io/cdk/scrolling/api) 相同 | `number` | `100` |
 | `(nzClick)` | 点击树节点触发 | `EventEmitter<NzFormatEmitEvent>` | - |
 | `(nzDblClick)` | 双击树节点触发 | `EventEmitter<NzFormatEmitEvent>` | - |
 | `(nzContextMenu)` | 右键树节点触发 | `EventEmitter<NzFormatEmitEvent>` | - |
@@ -90,7 +94,7 @@ import { NzTreeModule } from 'ng-zorro-antd';
 | --- | --- | --- | --- |
 | eventName | 事件名 | enum: `click` `dblclick` `contextmenu` `check` `expand` `search` & `dragstart` `dragenter` `dragover` `dragleave` `drop` `dragend` | - |
 | node | 当前操作节点(拖拽时表示目标节点) | `NzTreeNode` | `null` |
-| event | 原生事件 | `'MouseEvent'｜'DragEvent'` | `null` |
+| event | 原生事件 | `'MouseEvent' \| 'DragEvent'` | `null` |
 | dragNode? | 当前拖拽节点(拖拽时存在) | `NzTreeNode` | `null` |
 | selectedKeys? | 已选中的节点key(单击时存在) | `NzTreeNode[]` | `[]` |
 | checkedKeys? | checkBox 已选中的节点key(点击 checkBox 存在) | `NzTreeNode[]` | `[]` |
@@ -135,6 +139,18 @@ import { NzTreeModule } from 'ng-zorro-antd';
 
 
 ## 注意
+* 当前请确保 `nzData` 在其他数据相关的属性之前被初始化:
+```typescript
+// 示例
+this.nzExpandAll = false;
+const nodes = []; // 源数据
+this.nzData = [...nodes];
+// nzData 值异步获取变化后重新渲染一下属性
+this.nzExpandedKeys = [...this.nzExpandedKeys];
+// this.nzExpandAll = true;
+this.nzCheckedKeys = [...this.nzCheckedKeys];
+this.nzSelectedKeys = [...this.nzSelectedKeys];
+```
 * `NzTreeNodeOptions` 可以接受用户自定义属性，可通过 `NzTreeNode` 的 `origin` 属性取得。
 * 使用 ViewChild 时，Tree 方法需要在 ngAfterViewInit 中调用。
-* nzData 属性请传递 NzTreeNodeOptions 数组，传递 NzTreeNode 数组模式将在 8.x 版本取消兼容。
+* nzData 属性请传递 NzTreeNodeOptions 数组。

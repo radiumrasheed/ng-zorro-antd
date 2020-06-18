@@ -1,4 +1,4 @@
-@import '../../style/themes/default';
+@import '../../style/themes/index';
 @import '../../style/mixins/index';
 
 @badge-prefix-cls: ~'@{ant-prefix}-badge';
@@ -6,6 +6,7 @@
 
 .@{badge-prefix-cls} {
   .reset-component;
+
   position: relative;
   display: inline-block;
   color: unset;
@@ -158,7 +159,7 @@
     display: inline-block;
     height: @badge-height;
     transition: all 0.3s @ease-in-out;
-    > p {
+    > p.@{number-prefix-cls}-only-unit {
       height: @badge-height;
       margin: 0;
     }
@@ -188,3 +189,5 @@
     opacity: 0;
   }
 }
+
+@import './rtl';

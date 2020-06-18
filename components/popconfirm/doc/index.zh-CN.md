@@ -13,26 +13,29 @@ title: Popconfirm
 
 和 `confirm` 弹出的全屏居中模态对话框相比，交互形式更轻量。
 
-## API
-
-### 单独引入此组件
-
-想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
-
 ```ts
-import { NzPopconfirmModule } from 'ng-zorro-antd';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 ```
+
+## API
 
 ### [nz-popconfirm]
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| `[nzPopconfirmTitle]` | 确认框的描述 | `string \| TemplateRef<void>` | - |
+| `[nzPopconfirmTrigger]` | 触发行为，为 `null` 时不响应光标事件 | `'click' \| 'focus' \| 'hover' \| null` | `'hover'` |
+| `[nzPopconfirmPlacement]` | 气泡框位置 | `'top' \| 'left' \| 'right' \| 'bottom' \| 'topLeft' \| 'topRight' \| 'bottomLeft' \| 'bottomRight' \| 'leftTop' \| 'leftBottom' \| 'rightTop' \| 'rightBottom'` | `'top'` |
+| `[nzPopconfirmOrigin]` | 气泡框定位元素 | `ElementRef` | - |
+
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
 | `[nzCancelText]` | 取消按钮文字 | `string` | `'取消'` |
 | `[nzOkText]` | 确认按钮文字 | `string` | `'确定'` |
-| `[nzOkType]` | 确认按钮类型 | `'primary'｜'ghost'｜'dashed'｜'danger'｜'default'` | `'primary'` |
-| `[nzTitle]` | 确认框的描述 | `string｜TemplateRef<void>` | - |
+| `[nzOkType]` | 确认按钮类型 | `'primary' \| 'ghost' \| 'dashed' \| 'danger' \| 'default'` | `'primary'` |
 | `[nzCondition]` | 是否直接触发 `nzOnConfirm` 而不弹出框 | `boolean` | `false` |
-| `[nzIcon]` | 自定义弹出框的 icon  | `string｜TemplateRef<void>` | - |
+| `[nzIcon]` | 自定义弹出框的 icon  | `string \| TemplateRef<void>` | - |
 | `(nzOnCancel)` | 点击取消的回调 | `EventEmitter<void>` | - |
 | `(nzOnConfirm)` | 点击确认的回调 | `EventEmitter<void>` | - |
 
@@ -40,4 +43,4 @@ import { NzPopconfirmModule } from 'ng-zorro-antd';
 
 ## 注意
 
-请确保 `nz-popconfirm` 的子元素能接受 `onMouseEnter`、`onMouseLeave`、`onFocus`、`onClick` 事件。
+请确保 `[nz-popconfirm]` 元素能接受 `onMouseEnter`、`onMouseLeave`、`onFocus`、`onClick` 事件。

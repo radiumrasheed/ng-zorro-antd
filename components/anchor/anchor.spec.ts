@@ -1,10 +1,11 @@
 // tslint:disable
+// TODO remove tslint:disable @hsuanxyz
 import { fakeAsync, tick, TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { NzAnchorModule } from './nz-anchor.module';
-import { NzAnchorComponent } from './nz-anchor.component';
-import { NzScrollService } from 'ng-zorro-antd/core';
+import { NzScrollService } from 'ng-zorro-antd/core/services';
+import { NzAnchorModule } from './anchor.module';
+import { NzAnchorComponent } from './anchor.component';
 
 const throttleTime = 51;
 
@@ -44,10 +45,10 @@ describe('anchor', () => {
     });
 
     it('should hava remove listen when the component is destroyed', () => {
-      expect(context.comp['scroll$']!.closed).toBeFalsy();
+      expect(context.comp['destroy$']!.isStopped).toBeFalsy();
       context.comp.ngOnDestroy();
       fixture.detectChanges();
-      expect(context.comp['scroll$']!.closed).toBeTruthy();
+      expect(context.comp['destroy$']!.isStopped).toBeTruthy();
     });
 
     it('should actived when scrolling to the anchor', (done: () => void) => {
@@ -193,11 +194,11 @@ describe('anchor', () => {
   describe('**boundary**', () => {
     it('#getOffsetTop', (done: () => void) => {
       const el1 = document.getElementById('何时使用')!;
-      spyOn(el1, 'getClientRects').and.returnValue([]);
+      spyOn(el1, 'getClientRects').and.returnValue([] as any);
       const el2 = document.getElementById('parallel1')!;
       spyOn(el2, 'getBoundingClientRect').and.returnValue({
         top: 0
-      });
+      } as any);
       expect(context._scroll).not.toHaveBeenCalled();
       page.scrollTo();
       setTimeout(() => {
@@ -281,10 +282,11 @@ describe('anchor', () => {
       <div style="height: 1000px"></div>
       <h2 id="basic-target"></h2>
     </div>
-  `
+  `,
+  styleUrls: ['./style/patch.less']
 })
 export class TestComponent {
-  @ViewChild(NzAnchorComponent) comp: NzAnchorComponent;
+  @ViewChild(NzAnchorComponent, { static: false }) comp!: NzAnchorComponent;
   nzAffix = true;
   nzBounds = 5;
   nzOffsetTop = 0;

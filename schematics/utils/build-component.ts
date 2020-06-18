@@ -9,21 +9,22 @@
 import { strings, template as interpolateTemplate } from '@angular-devkit/core';
 import {
   apply,
+  applyTemplates,
   branchAndMerge,
   chain,
   filter,
   mergeWith,
   move,
   noop,
-  template,
   url,
   Rule,
   SchematicsException,
   Tree
 } from '@angular-devkit/schematics';
 import { FileSystemSchematicContext } from '@angular-devkit/schematics/tools';
-import { getDefaultComponentOptions, getProjectFromWorkspace, ts } from '@angular/cdk/schematics';
-import { Schema as ComponentOptions } from '@schematics/angular/component/schema';
+import { getDefaultComponentOptions, getProjectFromWorkspace } from '@angular/cdk/schematics';
+import { Schema as ComponentOptions, Style } from '@schematics/angular/component/schema';
+import * as ts from 'typescript';
 import {
   addDeclarationToModule,
   addEntryComponentToModule,
@@ -64,11 +65,7 @@ function getModuleClassnamePrefix(source: any): string {
   const className = getFirstNgModuleName(source);
   if (className) {
     const execArray = /(\w+)Module/gi.exec(className);
-    if (execArray && execArray[1]) {
-      return execArray[1];
-    } else {
-      return null;
-    }
+    return execArray?.[1] ?? null;
   } else {
     return null;
   }
@@ -210,12 +207,7 @@ export function buildComponent(options: ZorroComponentOptions,
     const schematicFilesUrl = './files';
     const schematicFilesPath = resolve(schematicPath, schematicFilesUrl);
 
-    options.style = (
-      options.style && options.style !== 'css'
-        ? options.style : options.styleext
-    ) || 'css';
-    options.skipTests = options.skipTests || !options.spec;
-
+    options.style = options.style || Style.Css;
     // Add the default component option values to the options if an option is not explicitly
     // specified but a default component option is available.
     Object.keys(options)
@@ -232,8 +224,8 @@ export function buildComponent(options: ZorroComponentOptions,
     options.module = findModuleFromOptions(host, options);
 
     const parsedPath = parseName(options.path!, options.name);
-    const source = readIntoSourceFile(host, options.module);
-    if (options.classnameWithModule) {
+    if (options.classnameWithModule && !options.skipImport && options.module) {
+      const source = readIntoSourceFile(host, options.module);
       modulePrefix = getModuleClassnamePrefix(source);
     }
 
@@ -251,7 +243,7 @@ export function buildComponent(options: ZorroComponentOptions,
     if (!supportedCssExtensions.includes(options.style!)) {
       // TODO: Cast is necessary as we can't use the Style enum which has been introduced
       // within CLI v7.3.0-rc.0. This would break the schematic for older CLI versions.
-      options.style = 'css';
+      options.style = Style.Css;
     }
 
     const classifyCovered = (name: string) => {
@@ -279,13 +271,13 @@ export function buildComponent(options: ZorroComponentOptions,
     }
 
     const templateSource = apply(url(schematicFilesUrl), [
-      options.skipTests ? filter(path => !path.endsWith('.spec.ts')) : noop(),
-      options.inlineStyle ? filter(path => !path.endsWith('.__style__')) : noop(),
-      options.inlineTemplate ? filter(path => !path.endsWith('.html')) : noop(),
+      options.skipTests ? filter(path => !path.endsWith('.spec.ts.template')) : noop(),
+      options.inlineStyle ? filter(path => !path.endsWith('.__style__.template')) : noop(),
+      options.inlineTemplate ? filter(path => !path.endsWith('.html.template')) : noop(),
       // Treat the template options as any, because the type definition for the template options
       // is made unnecessarily explicit. Every type of object can be used in the EJS template.
       // tslint:disable-next-line no-any
-      template({ indentTextContent, resolvedFiles, ...baseTemplateContext } as any),
+      applyTemplates({ indentTextContent, resolvedFiles, ...baseTemplateContext } as any),
       // TODO(devversion): figure out why we cannot just remove the first parameter
       // See for example: angular-cli#schematics/angular/component/index.ts#L160
       // tslint:disable-next-line no-any

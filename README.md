@@ -12,7 +12,8 @@ NG-ZORRO
 
 An enterprise-class UI components based on Ant Design and Angular.
 
-[![Travis branch](https://img.shields.io/travis/NG-ZORRO/ng-zorro-antd/master.svg?style=flat-square)](https://travis-ci.org/NG-ZORRO/ng-zorro-antd)
+[![Azure branch](https://img.shields.io/azure-devops/build/ng-zorro/0d271b73-3774-4dbc-a081-088df0b28bf8/2/master?style=flat-square)](https://dev.azure.com/ng-zorro/NG-ZORRO/_build)
+[![CodeFactor](https://www.codefactor.io/repository/github/ng-zorro/ng-zorro-antd/badge?style=flat-square)](https://www.codefactor.io/repository/github/ng-zorro/ng-zorro-antd)
 [![Codecov](https://img.shields.io/codecov/c/github/NG-ZORRO/ng-zorro-antd.svg?style=flat-square)](https://codecov.io/gh/NG-ZORRO/ng-zorro-antd)
 [![GitHub Release Date](https://img.shields.io/github/release-date/NG-ZORRO/ng-zorro-antd.svg?style=flat-square)](https://github.com/NG-ZORRO/ng-zorro-antd/releases)
 [![npm package](https://img.shields.io/npm/v/ng-zorro-antd.svg?style=flat-square)](https://www.npmjs.org/package/ng-zorro-antd)
@@ -20,10 +21,12 @@ An enterprise-class UI components based on Ant Design and Angular.
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE)
 [![Gitter](https://img.shields.io/gitter/room/ng-zorro/ng-zorro-antd.svg?style=flat-square)](https://gitter.im/ng-zorro/ng-zorro-antd)
 [![extension-for-VSCode](https://img.shields.io/badge/extension%20for-VSCode-blue.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=cipchk.ng-zorro-vscode)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Twitter](https://img.shields.io/badge/Twitter-NG--ZORRO-blue.svg?style=flat-square&logo=twitter)](https://twitter.com/ng_zorro)
 
 </div>
 
-[![](https://cdn-images-1.medium.com/max/2000/1*NIlj0-TdLMbo_hzSBP8tmg.png)](http://ng.ant.design)
+[![](https://img.alicdn.com/tfs/TB1t6QPylr0gK0jSZFnXXbRRXXa-4000-1378.png)](http://ng.ant.design)
 
 English | [简体中文](README-zh_CN.md)
 
@@ -34,10 +37,20 @@ English | [简体中文](README-zh_CN.md)
 - A set of high-quality Angular components out of the box.
 - Written in TypeScript with predictable static types.
 - The whole package of development and design resources and tools.
+- Support OnPush mode, high performance.
+- Powerful theme customization in every detail.
+- Internationalization support for dozens of languages.
+
+
+## ☀️ License
+
+[MIT](https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE)
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNG-ZORRO%2Fng-zorro-antd.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FNG-ZORRO%2Fng-zorro-antd?ref=badge_shield)
 
 ## 🖥 Environment Support
 
-* Angular `^7.0.0`
+* Angular `^9.0.0` [![npm package](https://img.shields.io/npm/v/ng-zorro-antd.svg?style=flat-square)](https://www.npmjs.org/package/ng-zorro-antd)
 * Server-side Rendering
 * Modern browsers and Internet Explorer 11+ (with [polyfills](https://angular.io/guide/browser-support))
 * [Electron](http://electron.atom.io/)
@@ -46,7 +59,6 @@ English | [简体中文](README-zh_CN.md)
 | --------- | --------- | --------- | --------- | --------- | --------- |
 | IE11, Edge | last 2 versions | last 2 versions | last 2 versions | last 2 versions | last 2 versions
 
-> Listing `@angular/cdk` as its dependency, `ng-zorro-antd` supports the most recent two versions of all major browsers.
 
 ## 🎨 Design Specification
 
@@ -73,13 +85,13 @@ $ npm install ng-zorro-antd
 
 ## 🔨 Usage
 
-Import the module into every module where you want to use the components.
+Import the component modules you want to use into your `app.module.ts` file and [feature modules](https://angular.io/guide/feature-modules).
 
 ```ts
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @NgModule({
-  imports: [ NgZorroAntdModule ]
+  imports: [ NzButtonModule ]
 })
 export class AppModule {
 }
@@ -118,14 +130,10 @@ See [Getting Started](https://ng.ant.design/docs/getting-started/en) for more de
 $ git clone git@github.com:NG-ZORRO/ng-zorro-antd.git
 $ cd ng-zorro-antd
 $ npm install
-$ npm run site:start
+$ npm run start
 ```
 
 Browser would open automatically.
-
-## 🗺 Road Map
-
-Check [this issue](https://github.com/NG-ZORRO/ng-zorro-antd/issues/2025) to read our plans for 2019.
 
 ## 🤝 Contributing
 
@@ -136,7 +144,9 @@ We welcome all contributions. Please read our [CONTRIBUTING.md](https://github.c
 
 > If you're new to posting issues, we ask that you read [*How To Ask Questions The Smart Way*](http://www.catb.org/~esr/faqs/smart-questions.html) (**This guide does not provide actual support services for this project!**), [How to Ask a Question in Open Source Community](https://github.com/seajs/seajs/issues/545) and [How to Report Bugs Effectively](http://www.chiark.greenend.org.uk/~sgtatham/bugs.html) prior to posting. Well written bug reports help us help you!
 
-[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/r/NG-ZORRO/ng-zorro-antd)
+Thanks to [JetBrains](https://www.jetbrains.com/?from=ng-zorro-antd) for supporting us free open source licenses.
+
+[![JetBrains](https://img.alicdn.com/tfs/TB1sSomo.z1gK0jSZLeXXb9kVXa-120-130.svg)](https://www.jetbrains.com/?from=ng-zorro-antd)
 
 ## ❓ Help from the Community
 
@@ -148,9 +158,20 @@ As always, we encourage experienced users to help those who are not familiar wit
 
 - [Alibaba](http://www.alibaba.com/)
 - [Aliyun](http://www.aliyun.com/)
+- [ThoughtWorks](https://www.thoughtworks.com/)
+- [Ververica](https://www.ververica.com/)
+- [Apache Flink](https://flink.apache.org/)
+- [Apache Zeppelin](http://zeppelin.apache.org/)
+- [Apache Metron](https://metron.apache.org/)
+- [Process Automation Group](http://pag.company/)
+- [AISINOCO](http://www.aisino.com/)
+- [GongDao](https://www.gongdao.com/)
+- [UC Express](http://www.uce.cn/)
+- [Qingflow](https://qingflow.com/)
+- [DataGrand](http://datagrand.com/)
+- [ScentBird](https://www.scentbird.com/)
+- [Southern Institute of Technology](https://www.sit.ac.nz/)
+- [Hapify (Dynamic boilerplates tool)](https://hub.hapify.io/)
 
-> If your company or product uses NG-ZORRO, let us know [here](https://github.com/NG-ZORRO/ng-zorro-antd/issues/1142)!
+> We list some users here, if your company or product uses NG-ZORRO, let us know [here](https://github.com/NG-ZORRO/ng-zorro-antd/issues/1142)!
 
-## ☀️ License
-
-MIT

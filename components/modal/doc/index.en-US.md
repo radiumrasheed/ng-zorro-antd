@@ -16,15 +16,11 @@ and so on.
 
 It is recommended to use the `Component` way to pop up the Modal, so that the component logic of the popup layer can be completely isolated from the outer component, and can be reused at any time. In the popup layer component, you can obtain Modal's component instance by injecting `NzModalRef` to control the behavior of the modal box.
 
-## API
-
-### Import this Component Individually
-
-You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
-
 ```ts
-import { NzModalModule } from 'ng-zorro-antd';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 ```
+
+## API
 
 ### NzModalService
 
@@ -44,12 +40,14 @@ The dialog is currently divided into 2 modes, `normal mode` and `confirm box mod
 | nzFooter          | Footer content, set as footer=null when you don't need default buttons. <i>1. Only valid in normal mode.<br>2. You can customize the buttons to the maximum extent by passing a `ModalButtonOptions` configuration (see the case or the instructions below).</i> | string<br>TemplateRef<br>ModalButtonOptions | OK and Cancel buttons |
 | nzGetContainer    | The mount node for Modal | HTMLElement / () => HTMLElement| A default container |
 | nzKeyboard        | Whether support press esc to close | `boolean` | `true` |
-| nzMask            | Whether show mask or not. | `boolean` | `true` |
-| nzMaskClosable    | Whether to close the modal dialog when the mask (area outside the modal) is clicked | `boolean` | `true` |
+| nzMask            | Whether show mask or not. | `boolean` | `true` | ✅ |
+| nzMaskClosable    | Whether to close the modal dialog when the mask (area outside the modal) is clicked | `boolean` | `true` | ✅ |
+| nzCloseOnNavigation    | Whether to close the modal when the navigation history changes | `boolean` | `true` | ✅ |
 | nzMaskStyle       | Style for modal's mask element. | `object` | - |
 | nzOkText          | Text of the OK button. <i>Set to null to show no ok button (this value is invalid if the nzFooter parameter is used in normal mode)</i> | `string` | OK |
 | nzOkType          | Button type of the OK button. <i>Consistent with the type of the `nz-button`.</i> | `string` | primary |
 | nzStyle           | Style of floating layer, typically used at least for adjusting the position. | `object` | - |
+| nzCloseIcon       | Custom close icon | `string\|TemplateRef<void>` | - |
 | nzTitle           | The modal dialog's title. <i>Leave blank to show no title. The usage of TemplateRef can refer to the case</i> | string / TemplateRef | - |
 | nzVisible         | Whether the modal dialog is visible or not. <i>When using the `<nz-modal>` tag, be sure to use two-way binding, for example: `[(nzVisible)]="visible"`.</i> | `boolean` | `false` |
 | nzWidth           | Width of the modal dialog. <i>When using numbers, the default unit is `px`</i> | string<br>number | 520 |
@@ -59,14 +57,13 @@ The dialog is currently divided into 2 modes, `normal mode` and `confirm box mod
 | nzOnCancel        | Specify a function that will be called when a user clicks mask, close button on top right or Cancel button (If nzContent is Component, the Component instance will be put in as an argument). <i>Note: When created with `NzModalService.create`, this parameter should be passed into the type of function (callback function). This function returns a promise, which is automatically closed when the execution is complete or the promise ends (return `false` to prevent closing)</i> | EventEmitter | - |
 | nzOnOk            | Specify a EventEmitter that will be emitted when a user clicks the OK button (If nzContent is Component, the Component instance will be put in as an argument). <i>Note: When created with `NzModalService.create`, this parameter should be passed into the type of function (callback function). This function returns a promise, which is automatically closed when the execution is complete or the promise ends (return `false` to prevent closing)</i> | EventEmitter | - |
 | nzContent         | Content | string / TemplateRef / Component / ng-content | - |
-| nzComponentParams | When nzContent is a Component, the attributes in this parameter will be passed to the nzContent instance | `object` | - |
+| nzComponentParams | Will be instance property when `nzContent` is a component，will be template variable when `nzContent` is `TemplateRef`  | `object` | - |
 | nzIconType        | Icon type of the Icon component. <i>Only valid in confirm box mode</i> | `string` | question-circle |
+| nzAutofocus        | autofocus and the position，disabled when is `null` | `'ok' \| 'cancel' \| 'auto' \| null` | `'auto'` |
 
 #### Attentions
 
-> The default state of `<nz-modal>` will not be automatically cleared. If you wish to open new content each time, use the `NzModalService` service to create modals (when created as a service, the `nzAfterClose` event will be listened by default aim to destroy the modal).
-
-> Modals created through the `NzModalService` service need you to manage their own life cycle. For example, when you switch the page route, the modal box created by service will not be destroyed automatically. You need to use the modal box's reference to manually destroy it (`NzModalRef.close()` or `NzModalRef.destroy()`).
+> The creation or modification of the `nzComponentParams` property does not trigger the `ngOnChanges` life cycle hook of the `nzContent` component.
 
 #### Using service to create Normal Mode modal
 
@@ -121,38 +118,14 @@ The dialog created by the service method `NzModalService.xxx()` will return a `N
 |----|----|
 | afterOpen                 | Same as nzAfterOpen but of type Observable&lt;void&gt; |
 | afterClose | Same as nzAfterClose, but of type Observable&lt;result:any&gt; |
-| open()                    | Open (display) dialog box. <i>Calling this function will fail if the dialog is already destroyed</i> |
 | close()                   | Close (hide) the dialog. <i>Note: When used for a dialog created as a service, this method will destroy the dialog directly (as with the destroy method)</i> |
 | destroy()                 | Destroy the dialog. <i>Note: Used only for dialogs created by the service (non-service created dialogs, this method only hides the dialog)</i> |
 | getContentComponent()  | Gets the Component instance in the contents of the dialog for `nzContent`. <i> Note: When the dialog is not initialized (`ngOnInit` is not executed), this function will return `undefined`</i> |
 | triggerOk()               | Manually trigger nzOnOk |
 | triggerCancel()           | Manually trigger nzOnCancel |
+| updateConfig(config: ModalOptions): void   | Update the config |
 
-
-###  Global Configuration
-
-Global Configuration（NZ_MODAL_CONFIG）
-
-if your want to set global configuration, you can use the value of provide `NZ_MODAL_CONFIG` to accomplish it.
-(eg, add `{ provide: NZ_MODAL_CONFIG, useValue: { nzMask: false }}` to `providers` of your module, you can import `NZ_MODAL_CONFIG` from `ng-zorro-antd`)
-
-The weight of global configuration, component default value, component input value:
-
-component input value > global configuration > component default value
-
-supported global configuration item
-```ts
-{
-    provide: NZ_MODAL_CONFIG,
-    useValue: {
-        nzMask?: boolean; // Whether show mask or not.
-        nzMaskClosable?: boolean; // Whether to close the modal dialog when the mask (area outside the modal) is clicked
-    }
-}
-```
-> Note: global configuration does not have default value which component has it.
-
-#### ModalButtonOptions (used to customize the bottom button)
+### ModalButtonOptions (used to customize the bottom button)
 
 An array of `ModalButtonOptions` type can be passed to `nzFooter` for custom bottom buttons.
 
@@ -180,3 +153,21 @@ nzFooter: [{
 ```
 
 The above configuration items can also be changed in real-time to trigger the button behavior change.
+
+### [nzModalFooter]
+
+Another way to customize the footer button.
+
+```html
+<div *nzModalFooter>
+  <button nz-button nzType="default" (click)="handleCancel()">Custom Callback</button>
+  <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Custom Submit</button>
+</div>
+
+<!-- or -->
+
+<ng-template [nzModalFooter]>
+  <button nz-button nzType="default" (click)="handleCancel()">Custom Callback</button>
+  <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Custom Submit</button>
+</ng-template>
+```

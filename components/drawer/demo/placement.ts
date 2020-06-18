@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NzDrawerPlacement } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'nz-demo-drawer-placement',
@@ -10,13 +11,7 @@ import { Component } from '@angular/core';
       <label nz-radio nzValue="left">left</label>
     </nz-radio-group>
     <button nz-button nzType="primary" (click)="open()">Open</button>
-    <nz-drawer
-      [nzClosable]="false"
-      [nzVisible]="visible"
-      [nzPlacement]="placement"
-      nzTitle="Basic Drawer"
-      (nzOnClose)="close()"
-    >
+    <nz-drawer [nzClosable]="false" [nzVisible]="visible" [nzPlacement]="placement" nzTitle="Basic Drawer" (nzOnClose)="close()">
       <p>Some contents...</p>
       <p>Some contents...</p>
       <p>Some contents...</p>
@@ -25,7 +20,7 @@ import { Component } from '@angular/core';
 })
 export class NzDemoDrawerPlacementComponent {
   visible = false;
-  placement = 'left';
+  placement: NzDrawerPlacement = 'left';
   open(): void {
     this.visible = true;
   }

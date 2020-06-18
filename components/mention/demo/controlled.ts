@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NzMentionComponent } from 'ng-zorro-antd/mention';
 
 @Component({
   selector: 'nz-demo-mention-controlled',
@@ -8,13 +9,10 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
     <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
       <nz-form-item>
         <nz-form-label [nzSm]="6" nzFor="mention">Top coders</nz-form-label>
-        <nz-form-control [nzSm]="16">
+        <nz-form-control [nzSm]="16" nzErrorTip="More than one must be selected!">
           <nz-mention #mentions [nzSuggestions]="suggestions">
             <input id="mention" placeholder="input here" formControlName="mention" nzMentionTrigger nz-input />
           </nz-mention>
-          <nz-form-explain *ngIf="validateForm.get('mention')?.dirty && validateForm.get('mention')?.errors">
-            More than one must be selected!
-          </nz-form-explain>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item nz-row style="margin-bottom:8px;">
@@ -29,8 +27,8 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 })
 export class NzDemoMentionControlledComponent implements OnInit {
   suggestions = ['afc163', 'benjycui', 'yiminghe', 'RaoHai', '中文', 'にほんご'];
-  validateForm: FormGroup;
-  @ViewChild('mentions') mentionChild: any;
+  validateForm!: FormGroup;
+  @ViewChild('mentions', { static: true }) mentionChild!: NzMentionComponent;
 
   get mention(): AbstractControl {
     return this.validateForm.get('mention')!;
@@ -55,6 +53,7 @@ export class NzDemoMentionControlledComponent implements OnInit {
 
   submitForm(): void {
     this.mention.markAsDirty();
+    this.mention.updateValueAndValidity();
     if (this.mention.valid) {
       console.log('Submit!!!', this.mention.value);
       console.log(this.mentionChild.getMentions());
@@ -64,7 +63,7 @@ export class NzDemoMentionControlledComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.validateForm.reset({
+    this.validateForm?.reset({
       mention: '@afc163 '
     });
   }

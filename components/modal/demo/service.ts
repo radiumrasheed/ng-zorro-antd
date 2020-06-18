@@ -1,7 +1,7 @@
-/* entryComponents: NzModalCustomComponent */
+/* declarations: NzModalCustomComponent */
 
-import { Component, Input, TemplateRef } from '@angular/core';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd';
+import { Component, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'nz-demo-modal-service',
@@ -16,12 +16,11 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd';
     <ng-template #tplTitle>
       <span>Title Template</span>
     </ng-template>
-    <ng-template #tplContent>
+    <ng-template #tplContent let-params let-ref="modalRef">
       <p>some contents...</p>
       <p>some contents...</p>
-      <p>some contents...</p>
-      <p>some contents...</p>
-      <p>some contents...</p>
+      <p>{{ params.value }}</p>
+      <button nz-button (click)="ref.destroy()">Destroy</button>
     </ng-template>
     <ng-template #tplFooter>
       <button nz-button nzType="primary" (click)="destroyTplModal()" [nzLoading]="tplModalButtonLoading">
@@ -40,7 +39,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd';
     <br /><br />
 
     <button nz-button nzType="primary" (click)="openAndCloseAll()">Open more modals then close all after 2s</button>
-    <nz-modal [(nzVisible)]="htmlModalVisible" nzMask="false" nzZIndex="1001" nzTitle="Non-service html modal"
+    <nz-modal [(nzVisible)]="htmlModalVisible" nzMask="false" [nzZIndex]="1001" nzTitle="Non-service html modal"
       >This is a non-service html modal</nz-modal
     >
   `,
@@ -53,15 +52,15 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd';
   ]
 })
 export class NzDemoModalServiceComponent {
-  tplModal: NzModalRef;
+  tplModal?: NzModalRef;
   tplModalButtonLoading = false;
   htmlModalVisible = false;
   disabled = false;
 
-  constructor(private modalService: NzModalService) {}
+  constructor(private modal: NzModalService, private viewContainerRef: ViewContainerRef) {}
 
   createModal(): void {
-    this.modalService.create({
+    this.modal.create({
       nzTitle: 'Modal Title',
       nzContent: 'string, will close after 1 sec',
       nzClosable: false,
@@ -70,12 +69,15 @@ export class NzDemoModalServiceComponent {
   }
 
   createTplModal(tplTitle: TemplateRef<{}>, tplContent: TemplateRef<{}>, tplFooter: TemplateRef<{}>): void {
-    this.tplModal = this.modalService.create({
+    this.tplModal = this.modal.create({
       nzTitle: tplTitle,
       nzContent: tplContent,
       nzFooter: tplFooter,
       nzMaskClosable: false,
       nzClosable: false,
+      nzComponentParams: {
+        value: 'Template Context'
+      },
       nzOnOk: () => console.log('Click ok')
     });
   }
@@ -84,55 +86,55 @@ export class NzDemoModalServiceComponent {
     this.tplModalButtonLoading = true;
     setTimeout(() => {
       this.tplModalButtonLoading = false;
-      this.tplModal.destroy();
+      this.tplModal!.destroy();
     }, 1000);
   }
 
   createComponentModal(): void {
-    const modal = this.modalService.create({
+    const modal = this.modal.create({
       nzTitle: 'Modal Title',
       nzContent: NzModalCustomComponent,
+      nzViewContainerRef: this.viewContainerRef,
+      nzGetContainer: () => document.body,
       nzComponentParams: {
         title: 'title in component',
         subtitle: 'component sub title，will be changed after 2 sec'
       },
+      nzOnOk: () => new Promise(resolve => setTimeout(resolve, 1000)),
       nzFooter: [
         {
-          label: 'change component tilte from outside',
+          label: 'change component title from outside',
           onClick: componentInstance => {
             componentInstance!.title = 'title in inner component is changed';
           }
         }
       ]
     });
-
+    const instance = modal.getContentComponent();
     modal.afterOpen.subscribe(() => console.log('[afterOpen] emitted!'));
-
     // Return a result when closed
     modal.afterClose.subscribe(result => console.log('[afterClose] The result is:', result));
 
     // delay until modal instance created
     setTimeout(() => {
-      const instance = modal.getContentComponent();
       instance.subtitle = 'sub title is changed';
     }, 2000);
   }
 
   createCustomButtonModal(): void {
-    const modal: NzModalRef = this.modalService.create({
+    const modal: NzModalRef = this.modal.create({
       nzTitle: 'custom button demo',
       nzContent: 'pass array of button config to nzFooter to create multiple buttons',
       nzFooter: [
         {
           label: 'Close',
-          shape: 'default',
+          shape: 'round',
           onClick: () => modal.destroy()
         },
         {
           label: 'Confirm',
           type: 'primary',
-          onClick: () =>
-            this.modalService.confirm({ nzTitle: 'Confirm Modal Title', nzContent: 'Confirm Modal Content' })
+          onClick: () => this.modal.confirm({ nzTitle: 'Confirm Modal Title', nzContent: 'Confirm Modal Content' })
         },
         {
           label: 'Change Button Status',
@@ -162,7 +164,7 @@ export class NzDemoModalServiceComponent {
 
     ['create', 'info', 'success', 'error'].forEach(method =>
       // @ts-ignore
-      this.modalService[method]({
+      this.modal[method]({
         nzMask: false,
         nzTitle: `Test ${method} title`,
         nzContent: `Test content: <b>${method}</b>`,
@@ -172,9 +174,9 @@ export class NzDemoModalServiceComponent {
 
     this.htmlModalVisible = true;
 
-    this.modalService.afterAllClose.subscribe(() => console.log('afterAllClose emitted!'));
+    this.modal.afterAllClose.subscribe(() => console.log('afterAllClose emitted!'));
 
-    setTimeout(() => this.modalService.closeAll(), 2000);
+    setTimeout(() => this.modal.closeAll(), 2000);
   }
 }
 
@@ -192,8 +194,8 @@ export class NzDemoModalServiceComponent {
   `
 })
 export class NzModalCustomComponent {
-  @Input() title: string;
-  @Input() subtitle: string;
+  @Input() title?: string;
+  @Input() subtitle?: string;
 
   constructor(private modal: NzModalRef) {}
 

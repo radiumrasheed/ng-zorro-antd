@@ -1,5 +1,5 @@
-// tslint:disable:no-any
 import { Component } from '@angular/core';
+import { NzCascaderOption } from 'ng-zorro-antd/cascader';
 
 const options = [
   {
@@ -54,20 +54,13 @@ const options = [
       (ngModelChange)="onChanges($event)"
     >
     </nz-cascader>
-  `,
-  styles: [
-    `
-      .ant-cascader-picker {
-        width: 300px;
-      }
-    `
-  ]
+  `
 })
 export class NzDemoCascaderTriggerActionComponent {
-  nzOptions = options;
-  values: any[] | null = null;
+  nzOptions: NzCascaderOption[] = options;
+  values: string[] | null = null;
 
-  onChanges(values: any): void {
+  onChanges(values: string[]): void {
     console.log(values, this.values);
   }
 }

@@ -1,21 +1,25 @@
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { Platform } from '@angular/cdk/platform';
 import { NgZone } from '@angular/core';
 
 export class NzWaveRenderer {
   private waveTransitionDuration = 400;
-  private styleForPseudo: HTMLStyleElement | null;
-  private extraNode: HTMLDivElement | null;
+  private styleForPseudo: HTMLStyleElement | null = null;
+  private extraNode: HTMLDivElement | null = null;
   private lastTime = 0;
-
+  private platform = new Platform();
+  clickHandler: () => void;
   get waveAttributeName(): string {
     return this.insertExtraNode ? 'ant-click-animating' : 'ant-click-animating-without-extra-node';
   }
 
   constructor(private triggerElement: HTMLElement, private ngZone: NgZone, private insertExtraNode: boolean) {
-    const platform = new Platform();
-    if (platform.isBrowser) {
-      this.bindTriggerEvent();
-    }
+    this.clickHandler = this.onClick.bind(this);
+    this.bindTriggerEvent();
   }
 
   onClick = (event: MouseEvent) => {
@@ -32,16 +36,19 @@ export class NzWaveRenderer {
   };
 
   bindTriggerEvent(): void {
-    this.ngZone.runOutsideAngular(() => {
-      if (this.triggerElement) {
-        this.triggerElement.addEventListener('click', this.onClick, true);
-      }
-    });
+    if (this.platform.isBrowser) {
+      this.ngZone.runOutsideAngular(() => {
+        this.removeTriggerEvent();
+        if (this.triggerElement) {
+          this.triggerElement.addEventListener('click', this.clickHandler, true);
+        }
+      });
+    }
   }
 
   removeTriggerEvent(): void {
     if (this.triggerElement) {
-      this.triggerElement.removeEventListener('click', this.onClick, true);
+      this.triggerElement.removeEventListener('click', this.clickHandler, true);
     }
   }
 
@@ -73,7 +80,10 @@ export class NzWaveRenderer {
         this.styleForPseudo = document.createElement('style');
       }
 
-      this.styleForPseudo.innerHTML = `[ant-click-animating-without-extra-node]:after { border-color: ${waveColor}; }`;
+      this.styleForPseudo.innerHTML = `
+      [ant-click-animating-without-extra-node='true']::after, .ant-click-animating-node {
+        --antd-wave-shadow-color: ${waveColor};
+      }`;
       document.body.appendChild(this.styleForPseudo);
     }
 

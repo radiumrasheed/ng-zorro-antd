@@ -4,9 +4,7 @@ import { Component } from '@angular/core';
   selector: 'nz-demo-empty-customize',
   template: `
     <nz-empty
-      [nzNotFoundImage]="
-        'https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original'
-      "
+      nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
       [nzNotFoundContent]="contentTpl"
       [nzNotFoundFooter]="footerTpl"
     >
@@ -17,8 +15,7 @@ import { Component } from '@angular/core';
         <button nz-button nzType="primary" (click)="onClick()">Create Now</button>
       </ng-template>
     </nz-empty>
-  `,
-  styles: []
+  `
 })
 export class NzDemoEmptyCustomizeComponent {
   onClick(): void {

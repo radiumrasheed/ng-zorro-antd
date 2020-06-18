@@ -1,12 +1,9 @@
 /**
- * @license
- * Copyright Alibaba.com All Rights Reserved.
- *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
-export * from './nz-calendar.module';
-export * from './nz-calendar.component';
-export * from './nz-calendar-cells';
-export * from './nz-calendar-header.component';
+export * from './calendar.module';
+export * from './calendar.component';
+export * from './calendar-cells';
+export * from './calendar-header.component';

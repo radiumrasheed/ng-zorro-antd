@@ -4,10 +4,8 @@ import { Component } from '@angular/core';
   selector: 'nz-demo-input-textarea',
   template: `
     <textarea rows="4" nz-input [(ngModel)]="inputValue"></textarea>
-  `,
-
-  styles: []
+  `
 })
 export class NzDemoInputTextareaComponent {
-  inputValue: string;
+  inputValue?: string;
 }

@@ -1,3 +1,9 @@
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+import { NzSafeAny } from 'ng-zorro-antd/core/types';
+
 // from https://github.com/component/textarea-caret-position
 
 // We'll copy the properties below into the mirror div.
@@ -47,8 +53,7 @@ export const properties = [
 
 const isBrowser = typeof window !== 'undefined';
 
-// tslint:disable-next-line:no-any
-const isFirefox = isBrowser && (window as any).mozInnerScreenX != null;
+const isFirefox = isBrowser && (window as NzSafeAny).mozInnerScreenX != null;
 
 const _parseInt = (str: string) => parseInt(str, 10);
 
@@ -82,8 +87,7 @@ export function getCaretCoordinates(
 
   const style = div.style;
 
-  // tslint:disable-next-line:no-any
-  const computed = window.getComputedStyle ? window.getComputedStyle(element) : (element as any).currentStyle; // currentStyle for IE < 9
+  const computed = window.getComputedStyle ? window.getComputedStyle(element) : (element as NzSafeAny).currentStyle; // currentStyle for IE < 9
   const isInput = element.nodeName === 'INPUT';
 
   // Default textarea styles
@@ -159,14 +163,6 @@ export function createDebugEle(element: HTMLInputElement | HTMLTextAreaElement, 
   rect.style.backgroundColor = 'red';
   rect.style.height = fontSize;
   rect.style.width = '1px';
-  rect.style.top = `${element.getBoundingClientRect().top -
-    element.scrollTop +
-    window.pageYOffset +
-    coordinates.top}px`;
-  rect.style.left = `${element.getBoundingClientRect().left -
-    element.scrollLeft +
-    window.pageXOffset +
-    coordinates.left}px`;
-  console.log(rect.style.top);
-  console.log(rect.style.left);
+  rect.style.top = `${element.getBoundingClientRect().top - element.scrollTop + window.pageYOffset + coordinates.top}px`;
+  rect.style.left = `${element.getBoundingClientRect().left - element.scrollLeft + window.pageXOffset + coordinates.left}px`;
 }

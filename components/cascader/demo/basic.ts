@@ -83,7 +83,7 @@ const otherOptions = [
 @Component({
   selector: 'nz-demo-cascader-basic',
   template: `
-    <nz-cascader [nzOptions]="nzOptions" [(ngModel)]="values" (ngModelChange)="onChanges($event)"> </nz-cascader>
+    <nz-cascader [nzOptions]="nzOptions" [(ngModel)]="values" (ngModelChange)="onChanges($event)"></nz-cascader>
     &nbsp;
     <a href="javascript:;" (click)="changeNzOptions()" class="change-options">
       Change Options
@@ -91,9 +91,6 @@ const otherOptions = [
   `,
   styles: [
     `
-      .ant-cascader-picker {
-        width: 300px;
-      }
       .change-options {
         display: inline-block;
         font-size: 12px;

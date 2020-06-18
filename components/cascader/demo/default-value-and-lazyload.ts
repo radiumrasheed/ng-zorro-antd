@@ -1,5 +1,5 @@
-// tslint:disable:no-any
 import { Component } from '@angular/core';
+import { NzCascaderOption } from 'ng-zorro-antd/cascader';
 
 const provinces = [
   {
@@ -51,26 +51,17 @@ const scenicspots: { [key: string]: Array<{ value: string; label: string; isLeaf
 
 @Component({
   selector: 'nz-demo-cascader-default-value-and-lazyload',
-  template: `
-    <nz-cascader [(ngModel)]="values" [nzLoadData]="loadData" (ngModelChange)="onChanges($event)"> </nz-cascader>
-  `,
-  styles: [
-    `
-      .ant-cascader-picker {
-        width: 300px;
-      }
-    `
-  ]
+  template: ` <nz-cascader [(ngModel)]="values" [nzLoadData]="loadData" (ngModelChange)="onChanges($event)"> </nz-cascader> `
 })
 export class NzDemoCascaderDefaultValueAndLazyloadComponent {
-  values: any[] = ['zhejiang', 'hangzhou', 'xihu'];
+  values: string[] = ['zhejiang', 'hangzhou', 'xihu'];
 
-  onChanges(values: any): void {
+  onChanges(values: string[]): void {
     console.log(values, this.values);
   }
 
   /** load data async execute by `nzLoadData` method */
-  loadData(node: any, index: number): PromiseLike<any> {
+  loadData(node: NzCascaderOption, index: number): PromiseLike<void> {
     return new Promise(resolve => {
       setTimeout(() => {
         if (index < 0) {

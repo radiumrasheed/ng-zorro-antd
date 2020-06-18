@@ -7,22 +7,22 @@ import { map } from 'rxjs/operators';
   selector: 'nz-demo-select-scroll-load',
   template: `
     <nz-select
-      style="width: 100%;"
       [(ngModel)]="selectedUser"
       (nzScrollToBottom)="loadMore()"
       nzPlaceHolder="Select users"
       nzAllowClear
+      [nzDropdownRender]="renderTemplate"
     >
       <nz-option *ngFor="let o of optionList" [nzValue]="o" [nzLabel]="o"></nz-option>
-      <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-        <i nz-icon type="loading" class="loading-icon"></i> Loading Data...
-      </nz-option>
     </nz-select>
+    <ng-template #renderTemplate>
+      <nz-spin *ngIf="isLoading"></nz-spin>
+    </ng-template>
   `,
   styles: [
     `
-      .loading-icon {
-        margin-right: 8px;
+      nz-select {
+        width: 100%;
       }
     `
   ]
@@ -41,7 +41,6 @@ export class NzDemoSelectScrollLoadComponent implements OnInit {
         return list.map((item: any) => `${item.name.first}`);
       })
     );
-  // tslint:enable:no-any
 
   loadMore(): void {
     this.isLoading = true;

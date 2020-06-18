@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 
 @Component({
   selector: 'nz-demo-upload-drag',
@@ -7,8 +8,7 @@ import { NzMessageService } from 'ng-zorro-antd';
     <nz-upload
       nzType="drag"
       [nzMultiple]="true"
-      [nzLimit]="2"
-      nzAction="https://jsonplaceholder.typicode.com/posts/"
+      nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
       (nzChange)="handleChange($event)"
     >
       <p class="ant-upload-drag-icon">
@@ -23,8 +23,8 @@ import { NzMessageService } from 'ng-zorro-antd';
 })
 export class NzDemoUploadDragComponent {
   constructor(private msg: NzMessageService) {}
-  // tslint:disable-next-line:no-any
-  handleChange({ file, fileList }: { [key: string]: any }): void {
+
+  handleChange({ file, fileList }: NzUploadChangeParam): void {
     const status = file.status;
     if (status !== 'uploading') {
       console.log(file, fileList);

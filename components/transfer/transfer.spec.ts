@@ -1,16 +1,16 @@
 // tslint:disable:no-any no-parameter-reassignment
-import { Component, DebugElement, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, DebugElement, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { of, Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { NzIconTestModule } from 'ng-zorro-antd/icon/testing';
 import en_US from '../i18n/languages/en_US';
 import { NzI18nService } from '../i18n/nz-i18n.service';
-import { NzIconTestModule } from '../icon/nz-icon-test.module';
 import { NzTransferComponent, NzTransferModule } from './index';
-import { TransferCanMove, TransferItem } from './interface';
+import { TransferCanMove, TransferDirection, TransferItem } from './interface';
 
 const COUNT = 21;
 const LEFTCOUNT = 2;
@@ -35,6 +35,32 @@ describe('transfer', () => {
   });
 
   describe('[default]', () => {
+    it('should be from left to right when via nzTargetKeys property', () => {
+      instance.nzTargetKeys = ['0', '1'];
+      fixture.detectChanges();
+
+      const leftKeys = instance.comp.leftDataSource.map(e => e.key);
+      const rightKeys = instance.comp.rightDataSource.map(e => e.key);
+
+      expect(rightKeys).toContain('0');
+      expect(leftKeys).not.toContain('0');
+
+      expect(rightKeys).toContain('1');
+      expect(leftKeys).not.toContain('1');
+    });
+
+    it('should be from left to right when via nzSelectedKeys property', () => {
+      instance.nzSelectedKeys = ['0', '1', '2'];
+      fixture.detectChanges();
+
+      expect(
+        instance.comp.nzSelectedKeys.every(e => {
+          const data = instance.comp.nzDataSource.find(d => d.key === e);
+          return !!data?.checked;
+        })
+      ).toBe(true);
+    });
+
     it('should be from left to right', () => {
       pageObject
         .expectLeft(LEFTCOUNT)
@@ -75,7 +101,7 @@ describe('transfer', () => {
       pageObject.checkItem('left', 0).search('left', '1');
       pageObject.rightBtn.click();
       fixture.detectChanges();
-      expect(instance.comp.rightDataSource.filter(w => !w._hiden).length).toBe(COUNT - LEFTCOUNT + 1);
+      expect(instance.comp.rightDataSource.filter(w => !w.hide).length).toBe(COUNT - LEFTCOUNT + 1);
     });
 
     it('should be custom filter option', () => {
@@ -197,6 +223,21 @@ describe('transfer', () => {
       });
     });
 
+    it('#nzShowSelectAll', () => {
+      const cls = `[data-direction="left"] .ant-transfer-list-header .ant-checkbox`;
+      expect(dl.queryAll(By.css(cls)).length).toBe(1);
+      instance.nzShowSelectAll = false;
+      fixture.detectChanges();
+      expect(dl.queryAll(By.css(cls)).length).toBe(0);
+    });
+
+    it('#nzRenderList', () => {
+      instance.nzRenderList = [instance.renderListTpl, instance.renderListTpl];
+      fixture.detectChanges();
+      expect(dl.queryAll(By.css('.ant-transfer-customize-list')).length).toBe(1);
+      expect(dl.queryAll(By.css('.transfer-renderList')).length).toBe(2);
+    });
+
     it('should be uncheck all when two verification error', () => {
       instance.canMove = (arg: TransferCanMove): Observable<TransferItem[]> => {
         return of(arg.list).pipe(
@@ -271,9 +312,9 @@ describe('transfer', () => {
       instance = dl.componentInstance;
       pageObject = new TransferPageObject();
       fixture.detectChanges();
-      expect(
-        pageObject.getEl('[data-direction="right"] .ant-transfer-list-header .ant-checkbox').classList
-      ).not.toContain('ant-checkbox-checked');
+      expect(pageObject.getEl('[data-direction="right"] .ant-transfer-list-header .ant-checkbox').classList).not.toContain(
+        'ant-checkbox-checked'
+      );
       pageObject.checkItem('right', 1);
       tick(50);
       fixture.detectChanges();
@@ -306,7 +347,7 @@ describe('transfer', () => {
       return dl.query(By.css('[data-direction="right"]')).nativeElement as HTMLElement;
     }
 
-    transfer(direction: 'left' | 'right', index: number | number[]): this {
+    transfer(direction: TransferDirection, index: number | number[]): this {
       if (!Array.isArray(index)) {
         index = [index];
       }
@@ -316,11 +357,7 @@ describe('transfer', () => {
       return this;
     }
 
-    checkItem(
-      direction: 'left' | 'right',
-      index: number | number[],
-      cls: string = '.ant-transfer-list-content-item label'
-    ): this {
+    checkItem(direction: TransferDirection, index: number | number[], cls: string = '.ant-transfer-list-content-item label'): this {
       if (!Array.isArray(index)) {
         index = [index];
       }
@@ -333,10 +370,8 @@ describe('transfer', () => {
       return this;
     }
 
-    search(direction: 'left' | 'right', value: string): this {
-      const ipt = (direction === 'left' ? this.leftList : this.rightList).querySelector(
-        '.ant-transfer-list-search'
-      ) as HTMLInputElement;
+    search(direction: TransferDirection, value: string): this {
+      const ipt = (direction === 'left' ? this.leftList : this.rightList).querySelector('.ant-transfer-list-search') as HTMLInputElement;
       ipt.value = value;
       ipt.dispatchEvent(new Event('input'));
       fixture.detectChanges();
@@ -360,6 +395,8 @@ describe('transfer', () => {
     <nz-transfer
       #comp
       [nzDataSource]="nzDataSource"
+      [nzRenderList]="nzRenderList"
+      [nzShowSelectAll]="nzShowSelectAll"
       [nzDisabled]="nzDisabled"
       [nzTitles]="['Source', 'Target']"
       [nzOperations]="['to right', 'to left']"
@@ -372,23 +409,32 @@ describe('transfer', () => {
       [nzNotFoundContent]="nzNotFoundContent"
       [nzCanMove]="canMove"
       [nzFooter]="footer"
+      [nzTargetKeys]="nzTargetKeys"
       (nzSearchChange)="search($event)"
       (nzSelectChange)="select($event)"
       (nzChange)="change($event)"
     >
-      <ng-template #footer>
-        <p id="transfer-footer">footer</p>
-      </ng-template>
     </nz-transfer>
+    <ng-template #renderList>
+      <p class="transfer-renderList">renderList</p>
+    </ng-template>
+    <ng-template #footer>
+      <p id="transfer-footer">footer</p>
+    </ng-template>
   `,
   styleUrls: ['./style/index.less'],
   encapsulation: ViewEncapsulation.None
 })
 class TestTransferComponent implements OnInit {
-  @ViewChild('comp') comp: NzTransferComponent;
+  @ViewChild('comp', { static: false }) comp!: NzTransferComponent;
+  @ViewChild('renderList', { static: false }) renderListTpl!: TemplateRef<void>;
   nzDataSource: any[] = [];
+  nzRenderList: Array<TemplateRef<void> | null> = [null, null];
   nzDisabled = false;
+  nzShowSelectAll = true;
   nzTitles = ['Source', 'Target'];
+  nzSelectedKeys = ['0', '1', '2'];
+  nzTargetKeys: string[] = [];
   nzOperations = ['to right', 'to left'];
   nzItemUnit = 'item';
   nzItemsUnit = 'items';
@@ -410,7 +456,7 @@ class TestTransferComponent implements OnInit {
       key: string;
       title: string;
       description: string;
-      direction: string;
+      direction: TransferDirection;
       icon: string;
       disabled: boolean;
     }> = [];
@@ -419,7 +465,7 @@ class TestTransferComponent implements OnInit {
         key: i.toString(),
         title: `content${i + 1}`,
         description: `description of content${i + 1}`,
-        direction: i >= LEFTCOUNT ? 'right' : '',
+        direction: i >= LEFTCOUNT ? 'right' : 'left',
         icon: `frown-o`,
         disabled: i === 20
       });
@@ -437,22 +483,34 @@ class TestTransferComponent implements OnInit {
 @Component({
   template: `
     <nz-transfer #comp nzShowSearch [nzRender]="render" [nzDataSource]="nzDataSource">
-      <ng-template #render let-item> <i nz-icon type="{{ item.icon }}"></i> {{ item.title }} </ng-template>
+      <ng-template #render let-item> <i nz-icon nzType="{{ item.icon }}"></i> {{ item.title }} </ng-template>
     </nz-transfer>
   `
 })
 class TestTransferCustomRenderComponent implements OnInit {
-  @ViewChild('comp') comp: NzTransferComponent;
-  nzDataSource: Array<{ key: string; title: string; description: string; direction: string; icon: string }> = [];
+  @ViewChild('comp', { static: false }) comp?: NzTransferComponent;
+  nzDataSource: Array<{
+    key: string;
+    title: string;
+    description: string;
+    direction: TransferDirection;
+    icon: string;
+  }> = [];
 
   ngOnInit(): void {
-    const ret: Array<{ key: string; title: string; description: string; direction: string; icon: string }> = [];
+    const ret: Array<{
+      key: string;
+      title: string;
+      description: string;
+      direction: TransferDirection;
+      icon: string;
+    }> = [];
     for (let i = 0; i < COUNT; i++) {
       ret.push({
         key: i.toString(),
         title: `content${i + 1}`,
         description: `description of content${i + 1}`,
-        direction: i >= LEFTCOUNT ? 'right' : '',
+        direction: i >= LEFTCOUNT ? 'right' : 'left',
         icon: `frown-o`
       });
     }
@@ -461,9 +519,7 @@ class TestTransferCustomRenderComponent implements OnInit {
 }
 
 @Component({
-  template: `
-    <nz-transfer [nzDataSource]="list"></nz-transfer>
-  `
+  template: ` <nz-transfer [nzDataSource]="list"></nz-transfer> `
 })
 class Test996Component implements OnInit {
   // tslint:disable-next-line:no-any

@@ -1,5 +1,23 @@
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
+import { warnDeprecation } from 'ng-zorro-antd/core/logger';
+import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzTreeNodeBaseComponent } from './nz-tree-base.definitions';
 import { NzTreeBaseService } from './nz-tree-base.service';
+
+export type NzTreeNodeKey = string | number;
+
+export interface FlattenNode {
+  parent: FlattenNode | null;
+  children: FlattenNode[];
+  pos: string;
+  data: NzTreeNode;
+  isStart: boolean[];
+  isEnd: boolean[];
+}
 
 export interface NzTreeNodeOptions {
   title: string;
@@ -14,46 +32,52 @@ export interface NzTreeNodeOptions {
   expanded?: boolean;
   children?: NzTreeNodeOptions[];
 
-  // tslint:disable-next-line:no-any
-  [key: string]: any;
+  [key: string]: NzSafeAny;
 }
 
 export class NzTreeNode {
-  private _title: string;
-  key: string;
+  private _title: string = '';
+  key!: string;
   level: number = 0;
-  origin: NzTreeNodeOptions;
+  origin!: NzTreeNodeOptions;
   // Parent Node
-  parentNode: NzTreeNode | null;
-  private _icon: string;
-  private _children: NzTreeNode[];
-  private _isLeaf: boolean;
-  private _isChecked: boolean;
+  parentNode: NzTreeNode | null = null;
+  private _icon: string = '';
+  private _children: NzTreeNode[] = [];
+  private _isLeaf: boolean = false;
+  private _isChecked: boolean = false;
   /**
    * @deprecated Maybe removed in next major version, use isChecked instead
    */
-  private _isAllChecked: boolean;
-  private _isSelectable: boolean;
-  private _isDisabled: boolean;
-  private _isDisableCheckbox: boolean;
-  private _isExpanded: boolean;
-  private _isHalfChecked: boolean;
-  private _isSelected: boolean;
-  private _isLoading: boolean;
-  isMatched: boolean;
+  private _isAllChecked: boolean = false;
+  private _isSelectable: boolean = false;
+  private _isDisabled: boolean = false;
+  private _isDisableCheckbox: boolean = false;
+  private _isExpanded: boolean = false;
+  private _isHalfChecked: boolean = false;
+  private _isSelected: boolean = false;
+  private _isLoading: boolean = false;
+  canHide: boolean = false;
+  isMatched: boolean = false;
 
-  service: NzTreeBaseService | null;
-  component: NzTreeNodeBaseComponent;
+  service: NzTreeBaseService | null = null;
+  component!: NzTreeNodeBaseComponent;
+
+  /** New added in Tree for easy data access */
+  isStart?: boolean[];
+  isEnd?: boolean[];
 
   get treeService(): NzTreeBaseService | null {
     return this.service || (this.parentNode && this.parentNode.treeService);
   }
 
-  constructor(
-    option: NzTreeNodeOptions | NzTreeNode,
-    parent: NzTreeNode | null = null,
-    service: NzTreeBaseService | null = null
-  ) {
+  /**
+   * Init nzTreeNode
+   * @param option: user's input
+   * @param parent
+   * @param service: base nzTreeService
+   */
+  constructor(option: NzTreeNodeOptions | NzTreeNode, parent: NzTreeNode | null = null, service: NzTreeBaseService | null = null) {
     if (option instanceof NzTreeNode) {
       return option;
     }
@@ -87,14 +111,7 @@ export class NzTreeNode {
     if (typeof option.children !== 'undefined' && option.children !== null) {
       option.children.forEach(nodeOptions => {
         const s = this.treeService;
-        if (
-          s &&
-          !s.isCheckStrictly &&
-          option.checked &&
-          !option.disabled &&
-          !nodeOptions.disabled &&
-          !nodeOptions.disableCheckbox
-        ) {
+        if (s && !s.isCheckStrictly && option.checked && !option.disabled && !nodeOptions.disabled && !nodeOptions.disableCheckbox) {
           nodeOptions.checked = option.checked;
         }
         this._children.push(new NzTreeNode(nodeOptions, this));
@@ -140,7 +157,7 @@ export class NzTreeNode {
 
   set isLeaf(value: boolean) {
     this._isLeaf = value;
-    // this.update();
+    this.update();
   }
 
   get isChecked(): boolean {
@@ -159,9 +176,10 @@ export class NzTreeNode {
   }
 
   /**
-   * @deprecated Maybe removed in next major version, use isChecked instead
+   * @deprecated Maybe removed in next major version, use `isChecked` instead.
    */
   set isAllChecked(value: boolean) {
+    warnDeprecation(`'isAllChecked' is going to be removed in 9.0.0. Please use 'isChecked' instead.`);
     this._isAllChecked = value;
   }
 
@@ -209,6 +227,7 @@ export class NzTreeNode {
     this._isExpanded = value;
     this.origin.expanded = value;
     this.afterValueChange('isExpanded');
+    this.afterValueChange('reRender');
   }
 
   get isSelected(): boolean {
@@ -238,9 +257,10 @@ export class NzTreeNode {
   }
 
   /**
-   * @deprecated Maybe removed in next major version, use isChecked instead
+   * @deprecated Maybe removed in next major version, use `isChecked` instead.
    */
   public setChecked(checked: boolean = false, halfChecked: boolean = false): void {
+    warnDeprecation(`'setChecked' is going to be removed in 9.0.0. Please use 'isChecked' instead.`);
     this.origin.checked = checked;
     this.isChecked = checked;
     this.isAllChecked = checked;
@@ -248,16 +268,20 @@ export class NzTreeNode {
   }
 
   /**
-   * @deprecated Maybe removed in next major version, use isExpanded instead
+   * @not-deprecated Maybe removed in next major version, use `isExpanded` instead.
+   * We need it until tree refactoring is finished
    */
   public setExpanded(value: boolean): void {
-    this.isExpanded = value;
+    this._isExpanded = value;
+    this.origin.expanded = value;
+    this.afterValueChange('isExpanded');
   }
 
   /**
-   * @deprecated Maybe removed in next major version, use isSelected instead
+   * @deprecated Maybe removed in next major version, use `isSelected` instead.
    */
   public setSelected(value: boolean): void {
+    warnDeprecation(`'setSelected' is going to be removed in 9.0.0. Please use 'isExpanded' isSelected.`);
     if (this.isDisabled) {
       return;
     }
@@ -273,10 +297,9 @@ export class NzTreeNode {
   }
 
   /**
-   * 支持按索引位置插入,叶子节点不可添加
+   * Support appending child nodes by position. Leaf node cannot be appended.
    */
-  // tslint:disable-next-line:no-any
-  public addChildren(children: any[], childPos: number = -1): void {
+  public addChildren(children: NzSafeAny[], childPos: number = -1): void {
     if (!this.isLeaf) {
       children.forEach(node => {
         const refreshLevel = (n: NzTreeNode) => {
@@ -305,6 +328,8 @@ export class NzTreeNode {
       // remove loading state
       this.isLoading = false;
     }
+    this.afterValueChange('addChildren');
+    this.afterValueChange('reRender');
   }
 
   public clearChildren(): void {
@@ -312,6 +337,7 @@ export class NzTreeNode {
     this.afterValueChange('clearChildren');
     this.children = [];
     this.origin.children = [];
+    this.afterValueChange('reRender');
   }
 
   public remove(): void {
@@ -320,6 +346,7 @@ export class NzTreeNode {
       parentNode.children = parentNode.getChildren().filter(v => v.key !== this.key);
       parentNode.origin.children = parentNode.origin.children!.filter(v => v.key !== this.key);
       this.afterValueChange('remove');
+      this.afterValueChange('reRender');
     }
   }
 
@@ -344,6 +371,12 @@ export class NzTreeNode {
         case 'remove':
           this.treeService.afterRemove([this]);
           break;
+        case 'reRender':
+          this.treeService.flattenTreeData(
+            this.treeService.rootNodes,
+            this.treeService.getExpandedNodeList().map(v => v.key!)
+          );
+          break;
       }
     }
     this.update();
@@ -351,7 +384,6 @@ export class NzTreeNode {
 
   public update(): void {
     if (this.component) {
-      this.component.setClassMap();
       this.component.markForCheck();
     }
   }

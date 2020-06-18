@@ -1,19 +1,23 @@
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { coerceElement } from '@angular/cdk/coercion';
 import { AfterViewInit, Directive, ElementRef, Inject, Input, OnChanges, Optional, Renderer2 } from '@angular/core';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
-
-import { InputBoolean } from '../util/convert';
+import { BooleanInput } from 'ng-zorro-antd/core/types';
+import { InputBoolean } from 'ng-zorro-antd/core/util';
 
 const DISABLED_CLASSNAME = 'nz-animate-disabled';
 
 @Directive({
   selector: '[nzNoAnimation]',
-  exportAs: 'nzNoAnimation',
-  host: {
-    '[@.disabled]': 'nzNoAnimation'
-  }
+  exportAs: 'nzNoAnimation'
 })
 export class NzNoAnimationDirective implements OnChanges, AfterViewInit {
+  static ngAcceptInputType_nzNoAnimation: BooleanInput;
+
   @Input() @InputBoolean() nzNoAnimation: boolean = false;
 
   constructor(

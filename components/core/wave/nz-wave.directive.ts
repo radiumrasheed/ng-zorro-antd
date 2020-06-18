@@ -1,14 +1,9 @@
-import {
-  Directive,
-  ElementRef,
-  Inject,
-  InjectionToken,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Optional
-} from '@angular/core';
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
+import { Directive, ElementRef, Inject, InjectionToken, Input, NgZone, OnDestroy, OnInit, Optional } from '@angular/core';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { NzWaveRenderer } from './nz-wave-renderer';
 
@@ -30,27 +25,41 @@ export function NZ_WAVE_GLOBAL_CONFIG_FACTORY(): NzWaveConfig {
 }
 
 @Directive({
-  selector: '[nz-wave]',
+  selector: '[nz-wave],button[nz-button]:not([nzType="link"])',
   exportAs: 'nzWave'
 })
 export class NzWaveDirective implements OnInit, OnDestroy {
   @Input() nzWaveExtraNode = false;
 
-  private waveRenderer: NzWaveRenderer;
+  private waveRenderer?: NzWaveRenderer;
   private waveDisabled: boolean = false;
+
+  get disabled(): boolean {
+    return this.waveDisabled;
+  }
+
+  get rendererRef(): NzWaveRenderer | undefined {
+    return this.waveRenderer;
+  }
 
   constructor(
     private ngZone: NgZone,
     private elementRef: ElementRef,
-    @Optional() @Inject(NZ_WAVE_GLOBAL_CONFIG) config: NzWaveConfig,
+    @Optional() @Inject(NZ_WAVE_GLOBAL_CONFIG) private config: NzWaveConfig,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) private animationType: string
   ) {
-    if (config && typeof config.disabled === 'boolean') {
-      this.waveDisabled = config.disabled;
+    this.waveDisabled = this.isConfigDisabled();
+  }
+
+  isConfigDisabled(): boolean {
+    let disabled = false;
+    if (this.config && typeof this.config.disabled === 'boolean') {
+      disabled = this.config.disabled;
     }
     if (this.animationType === 'NoopAnimations') {
-      this.waveDisabled = true;
+      disabled = true;
     }
+    return disabled;
   }
 
   ngOnDestroy(): void {
@@ -66,6 +75,22 @@ export class NzWaveDirective implements OnInit, OnDestroy {
   renderWaveIfEnabled(): void {
     if (!this.waveDisabled && this.elementRef.nativeElement) {
       this.waveRenderer = new NzWaveRenderer(this.elementRef.nativeElement, this.ngZone, this.nzWaveExtraNode);
+    }
+  }
+
+  disable(): void {
+    this.waveDisabled = true;
+    if (this.waveRenderer) {
+      this.waveRenderer.removeTriggerEvent();
+      this.waveRenderer.removeStyleAndExtraNode();
+    }
+  }
+
+  enable(): void {
+    // config priority
+    this.waveDisabled = this.isConfigDisabled() || false;
+    if (this.waveRenderer) {
+      this.waveRenderer.bindTriggerEvent();
     }
   }
 }

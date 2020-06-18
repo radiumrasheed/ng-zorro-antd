@@ -11,15 +11,11 @@ Checkbox.
 - Used for selecting multiple values from several options.
 - If you use only one checkbox, it is the same as using Switch to toggle between two states. The difference is that Switch will trigger the state change directly, but Checkbox just marks the state as changed and this needs to be submitted.
 
-## API
-
-### Import this Component Individually
-
-You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
-
 ```ts
-import { NzCheckboxModule } from 'ng-zorro-antd';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 ```
+
+## API
 
 ### [nz-checkbox]
 
@@ -29,7 +25,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd';
 | `[nzDisabled]` | Disable checkbox | `boolean` | `false` |
 | `[ngModel]` | Specifies whether the checkbox is selected, double binding | `boolean` | `false` |
 | `[nzIndeterminate]` | set the status of indeterminate，only affect the style | `boolean` | `false` |
-| `[nzValue]` | use for the callback of `nz-checkbox-wrapper` | `string` | - |
+| `[nzValue]` | use for the callback of `nz-checkbox-wrapper` | `any` | - |
 | `(ngModelChange)` | The callback function that is triggered when the state changes. | `EventEmitter<boolean>` | - |
 
 ### nz-checkbox-group
@@ -44,7 +40,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd';
 
 | Property | Description | Type | Default |
 | -------- | ----------- | ---- | ------- |
-| `(nzOnChange)` | The callback function that is triggered when the state changes. | `EventEmitter<string[]>` | - |
+| `(nzOnChange)` | The callback function that is triggered when the state changes. | `EventEmitter<any[]>` | - |
 
 ## Methods
 

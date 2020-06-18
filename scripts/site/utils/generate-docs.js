@@ -41,11 +41,12 @@ function generateToc(meta, raw) {
       links += `<nz-link nzHref="#${lowerText}" nzTitle="${text}"></nz-link>`
     }
   }
-  return `<nz-affix class="toc-affix" [nzOffsetTop]="16">
+  return `
+<nz-affix class="toc-affix" [nzOffsetTop]="16">
     <nz-anchor [nzAffix]="false" nzShowInkInFixed (nzClick)="goLink($event)">
-      ${links}
+        ${links}
     </nz-anchor>
-  </nz-affix>`;
+</nz-affix>`;
 }
 
 function baseInfo(file, path) {
@@ -61,8 +62,8 @@ function baseInfo(file, path) {
 }
 
 function generateTemplate(docsPath, name, zh, en) {
-  fs.writeFileSync(path.join(docsPath, `${name}-zh.html`), wrapperDocs(generateToc(zh.meta, zh.raw), generateTitle(zh.meta.title, '', zh.path), angularNonBindAble(zh.content)));
-  fs.writeFileSync(path.join(docsPath, `${name}-en.html`), wrapperDocs(generateToc(en.meta, en.raw), generateTitle(en.meta.title, '', en.path), angularNonBindAble(en.content)));
+  fs.writeFileSync(path.join(docsPath, `${name}-zh.html`), wrapperDocs(generateToc(zh.meta, zh.raw), generateTitle(zh.meta, zh.path), angularNonBindAble(zh.content)));
+  fs.writeFileSync(path.join(docsPath, `${name}-en.html`), wrapperDocs(generateToc(en.meta, en.raw), generateTitle(en.meta, en.path), angularNonBindAble(en.content)));
 }
 
 function generateComponent(docsPath, name) {

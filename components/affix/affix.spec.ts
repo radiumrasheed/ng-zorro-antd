@@ -1,11 +1,10 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { discardPeriodicTasks, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NzScrollService } from 'ng-zorro-antd/core/services';
 
-import { NzScrollService } from 'ng-zorro-antd/core';
-
-import { NzAffixComponent } from './nz-affix.component';
-import { NzAffixModule } from './nz-affix.module';
+import { NzAffixComponent } from './affix.component';
+import { NzAffixModule } from './affix.module';
 
 interface Offset {
   top: number;
@@ -56,10 +55,13 @@ describe('affix', () => {
     fixture = TestBed.createComponent(TestAffixComponent);
     context = fixture.componentInstance;
     component = context.nzAffixComponent;
-    scrollService = TestBed.get(NzScrollService);
+    scrollService = TestBed.inject(NzScrollService);
     componentObject = new NzAffixPageObject();
     debugElement = fixture.debugElement;
     componentObject.wrap().id = 'wrap';
+  }));
+  afterEach(fakeAsync(() => {
+    setupInitialState();
   }));
 
   describe('[default]', () => {
@@ -74,7 +76,7 @@ describe('affix', () => {
       fixture.detectChanges();
 
       expect(componentObject.wrap().offsetTop !== defaultOffsetTop).toBe(true);
-
+      setupInitialState();
       discardPeriodicTasks();
     }));
 
@@ -88,7 +90,7 @@ describe('affix', () => {
         emitScroll(window, defaultOffsetTop + startOffset - 1);
 
         expect(componentObject.wrap().offsetTop !== defaultOffsetTop).toBe(true);
-
+        setupInitialState();
         discardPeriodicTasks();
       }));
     });
@@ -98,7 +100,7 @@ describe('affix', () => {
         setupInitialState();
         emitScroll(window, defaultOffsetTop + startOffset + 1);
         expect(componentObject.wrap().offsetTop).toBe(defaultOffsetTop);
-
+        setupInitialState();
         discardPeriodicTasks();
       }));
 
@@ -115,7 +117,7 @@ describe('affix', () => {
           emitScroll(window, defaultOffsetTop + startOffset + 1);
 
           expect(componentObject.wrap().offsetLeft).toBe(100);
-
+          setupInitialState();
           discardPeriodicTasks();
         }));
       });
@@ -126,7 +128,7 @@ describe('affix', () => {
           emitScroll(window, defaultOffsetTop + startOffset + 1);
 
           expect(componentObject.wrap().offsetTop).toBe(defaultOffsetTop);
-
+          setupInitialState();
           discardPeriodicTasks();
         }));
       }
@@ -138,6 +140,7 @@ describe('affix', () => {
       componentObject.emitEvent(window, new Event('resize'));
       tick(20);
       fixture.detectChanges();
+      setupInitialState();
       discardPeriodicTasks();
     }));
   });
@@ -159,7 +162,7 @@ describe('affix', () => {
       fixture.detectChanges();
 
       expect(componentObject.elementRef().style.width).toBe(`100px`);
-
+      setupInitialState();
       discardPeriodicTasks();
     }));
 
@@ -176,6 +179,7 @@ describe('affix', () => {
       tick(20);
       fixture.detectChanges();
       expect(componentObject.elementRef().style.width).toBe(`${componentObject.elementRef().offsetWidth}px`);
+      setupInitialState();
       discardPeriodicTasks();
     }));
   });
@@ -204,17 +208,20 @@ describe('affix', () => {
         emitScroll(window, 2);
 
         expect(componentObject.wrap().offsetTop).toBe(offsetTop);
+        emitScroll(window, 0);
 
         discardPeriodicTasks();
       }));
     });
 
     it('recreate bug https://github.com/NG-ZORRO/ng-zorro-antd/issues/868', fakeAsync(() => {
-      context.newOffset = offsetTop.toString();
+      // tslint:disable-next-line:no-any
+      context.newOffset = offsetTop.toString() as any;
       setupInitialState({ offsetTop: offsetTop + 1 });
       emitScroll(window, 2);
 
       expect(componentObject.wrap().offsetTop).toBe(offsetTop);
+      emitScroll(window, 0);
 
       discardPeriodicTasks();
     }));
@@ -236,8 +243,9 @@ describe('affix', () => {
           emitScroll(target, 5000);
           const wrapEl = componentObject.wrap();
           expect(+wrapEl.style.bottom!.replace('px', '')).toBe(0);
+          emitScroll(window, 0);
 
-          discardPeriodicTasks();
+          setupInitialState();
         }));
       });
     });
@@ -254,7 +262,7 @@ describe('affix', () => {
           emitScroll(target, 0);
           const wrapEl = componentObject.wrap();
           expect(+wrapEl.style.bottom!.replace('px', '')).toBeGreaterThan(0);
-
+          setupInitialState();
           discardPeriodicTasks();
         }));
       });
@@ -265,7 +273,7 @@ describe('affix', () => {
           emitScroll(target, 5000);
           const wrapEl = componentObject.wrap();
           expect(+wrapEl.style.bottom!.replace('px', '')).toBe(0);
-
+          setupInitialState();
           discardPeriodicTasks();
         }));
       });
@@ -286,7 +294,7 @@ describe('affix', () => {
         emitScroll(window, defaultOffsetTop + startOffset + 1);
 
         expect(componentObject.elementRef().offsetTop !== defaultOffsetTop).toBe(true);
-
+        emitScroll(window, 0);
         discardPeriodicTasks();
       }));
     });
@@ -297,7 +305,7 @@ describe('affix', () => {
         emitScroll(target, defaultOffsetTop + startOffset - 1);
 
         expect(componentObject.elementRef().offsetTop !== defaultOffsetTop).toBe(true);
-
+        setupInitialState();
         discardPeriodicTasks();
       }));
     });
@@ -308,28 +316,21 @@ describe('affix', () => {
         emitScroll(target, defaultOffsetTop + startOffset + 1);
 
         expect(componentObject.elementRef().offsetTop !== defaultOffsetTop).toBe(true);
-
+        setupInitialState();
         discardPeriodicTasks();
       }));
     });
 
-    it('should be re-register listener', () => {
-      spyOn(component, 'updatePosition');
-      expect(component.updatePosition).not.toHaveBeenCalled();
-      fixture.detectChanges();
-      context.fakeTarget = window;
-      fixture.detectChanges();
-      expect(component.updatePosition).toHaveBeenCalled();
-    });
-
-    it('should be a string value', () => {
+    it('should be a string value', fakeAsync(() => {
       spyOn(component, 'updatePosition');
       expect(component.updatePosition).not.toHaveBeenCalled();
       fixture.detectChanges();
       context.fakeTarget = '#target';
       fixture.detectChanges();
+      tick();
       expect(component.updatePosition).toHaveBeenCalled();
-    });
+      discardPeriodicTasks();
+    }));
   });
 
   describe('(nzChange)', () => {
@@ -355,7 +356,7 @@ describe('affix', () => {
       emitScroll(window, defaultOffsetTop + startOffset - 1);
 
       expect(changeValue).toBe(false);
-
+      setupInitialState();
       discardPeriodicTasks();
     }));
   });
@@ -437,7 +438,6 @@ describe('affix', () => {
 
   function setupInitialState(options: { offsetTop?: number } = {}): void {
     componentObject.offsetYTo(componentObject.elementRef(), options.offsetTop || startOffset);
-    // 20ms显示器的重绘频率
     tick(20);
     fixture.detectChanges();
     componentObject.emitScroll(window, 0);
@@ -467,10 +467,7 @@ describe('affix-extra', () => {
     dl = fixture.debugElement;
   });
   it('#getOffset', () => {
-    const ret = fixture.componentInstance.nzAffixComponent.getOffset(
-      fixture.debugElement.query(By.css('#affix')).nativeElement,
-      window
-    );
+    const ret = fixture.componentInstance.nzAffixComponent.getOffset(fixture.debugElement.query(By.css('#affix')).nativeElement, window);
     expect(ret).not.toBeUndefined();
   });
   it('with window when scrolled below the bottom offset', fakeAsync(() => {
@@ -484,7 +481,7 @@ describe('affix-extra', () => {
       left: 5,
       width: 200,
       height: 20
-    });
+    } as DOMRect);
     window.dispatchEvent(new Event('scroll'));
     tick(30);
     fixture.detectChanges();
@@ -505,9 +502,8 @@ describe('affix-extra', () => {
   `
 })
 class TestAffixComponent {
-  @ViewChild(NzAffixComponent)
-  nzAffixComponent: NzAffixComponent;
+  @ViewChild(NzAffixComponent, { static: true }) nzAffixComponent!: NzAffixComponent;
   fakeTarget: string | Element | Window | null = null;
-  newOffset: {};
-  newOffsetBottom: {};
+  newOffset!: number;
+  newOffsetBottom!: number;
 }

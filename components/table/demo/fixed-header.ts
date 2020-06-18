@@ -1,13 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 
+interface ItemData {
+  name: string;
+  age: number;
+  address: string;
+}
+
 @Component({
   selector: 'nz-demo-table-fixed-header',
   template: `
     <nz-table #headerTable [nzData]="listOfData" [nzPageSize]="50" [nzScroll]="{ y: '240px' }">
       <thead>
         <tr>
-          <th nzWidth="150px">Name</th>
-          <th nzWidth="150px">Age</th>
+          <th>Name</th>
+          <th nzWidth="100px">Age</th>
           <th>Address</th>
         </tr>
       </thead>
@@ -22,15 +28,17 @@ import { Component, OnInit } from '@angular/core';
   `
 })
 export class NzDemoTableFixedHeaderComponent implements OnInit {
-  listOfData: any[] = [];
+  listOfData: ItemData[] = [];
 
   ngOnInit(): void {
+    const data = [];
     for (let i = 0; i < 100; i++) {
-      this.listOfData.push({
+      data.push({
         name: `Edward King ${i}`,
         age: 32,
         address: `London, Park Lane no. ${i}`
       });
     }
+    this.listOfData = data;
   }
 }

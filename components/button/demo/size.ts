@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NzButtonSize } from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'nz-demo-button-size',
@@ -13,15 +14,17 @@ import { Component } from '@angular/core';
     <button nz-button [nzSize]="size" nzType="primary">Primary</button>
     <button nz-button [nzSize]="size" nzType="default">Default</button>
     <button nz-button [nzSize]="size" nzType="dashed">Dashed</button>
-    <button nz-button [nzSize]="size" nzType="danger">Danger</button>
+    <a nz-button [nzSize]="size" nzType="link">Link</a>
     <br />
-    <button nz-button nzType="primary" [nzSize]="size" nzShape="circle"><i nz-icon type="download"></i></button>
-    <button nz-button nzType="primary" [nzSize]="size" nzShape="round"><i nz-icon type="download"></i>Download</button>
-    <button nz-button nzType="primary" [nzSize]="size"><i nz-icon type="download"></i>Download</button>
+    <button nz-button nzType="primary" [nzSize]="size"><i nz-icon nzType="download"></i></button>
+    <button nz-button nzType="primary" [nzSize]="size" nzShape="circle"><i nz-icon nzType="download"></i></button>
+    <button nz-button nzType="primary" [nzSize]="size" nzShape="round"><i nz-icon nzType="download"></i></button>
+    <button nz-button nzType="primary" [nzSize]="size" nzShape="round"><i nz-icon nzType="download"></i>Download</button>
+    <button nz-button nzType="primary" [nzSize]="size"><i nz-icon nzType="download"></i>Download</button>
     <br />
     <nz-button-group [nzSize]="size">
-      <button nz-button nzType="primary"><i nz-icon type="left"></i>Backward</button>
-      <button nz-button nzType="primary">Forward<i nz-icon type="right"></i></button>
+      <button nz-button nzType="primary"><i nz-icon nzType="left"></i>Backward</button>
+      <button nz-button nzType="primary">Forward<i nz-icon nzType="right"></i></button>
     </nz-button-group>
   `,
   styles: [
@@ -38,5 +41,5 @@ import { Component } from '@angular/core';
   ]
 })
 export class NzDemoButtonSizeComponent {
-  size = 'large';
+  size: NzButtonSize = 'large';
 }

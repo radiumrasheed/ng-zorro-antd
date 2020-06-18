@@ -1,7 +1,12 @@
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { QueryList } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-import { NzCarouselContentDirective } from '../nz-carousel-content.directive';
+import { NzCarouselContentDirective } from '../carousel-content.directive';
 
 import { NzCarouselBaseStrategy } from './base-strategy';
 

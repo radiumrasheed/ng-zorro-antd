@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   template: `
     <nz-tree-select
       style="width: 250px"
-      [nzDefaultExpandedKeys]="expandKeys"
+      [nzExpandedKeys]="expandKeys"
       [nzNodes]="nodes"
       nzShowSearch
       nzPlaceHolder="Please select"
@@ -17,7 +17,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NzDemoTreeSelectBasicComponent implements OnInit {
   expandKeys = ['100', '1001'];
-  value: string;
+  value?: string;
   nodes = [
     {
       title: 'parent 1',

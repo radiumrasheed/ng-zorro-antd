@@ -2,10 +2,6 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/spec",
-    "baseUrl": "./",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es5",
     "types": [
       "jasmine"
     ]
@@ -16,6 +12,8 @@
   ],
   "include": [
     "**/*.spec.ts",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "../node_modules/@types/jasmine/index.d.ts",
+    "../node_modules/karma-viewport/dist/index.d.ts"
   ]
 }

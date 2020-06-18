@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
       (nzOnClose)="close()"
     >
       <form nz-form>
-        <div nz-row nzGutter="8">
+        <div nz-row [nzGutter]="8">
           <div nz-col nzSpan="12">
             <nz-form-item>
               <nz-form-label>Name</nz-form-label>
@@ -33,7 +33,7 @@ import { Component } from '@angular/core';
             </nz-form-item>
           </div>
         </div>
-        <div nz-row nzGutter="8">
+        <div nz-row [nzGutter]="8">
           <div nz-col nzSpan="12">
             <nz-form-item>
               <nz-form-label>Owner</nz-form-label>
@@ -51,7 +51,7 @@ import { Component } from '@angular/core';
             </nz-form-item>
           </div>
         </div>
-        <div nz-row nzGutter="8">
+        <div nz-row [nzGutter]="8">
           <div nz-col nzSpan="12">
             <nz-form-item>
               <nz-form-label>Approver</nz-form-label>
@@ -69,41 +69,19 @@ import { Component } from '@angular/core';
             </nz-form-item>
           </div>
         </div>
-        <div nz-row nzGutter="8">
+        <div nz-row [nzGutter]="8">
           <div nz-col nzSpan="24">
             <nz-form-item>
               <nz-form-label>Description</nz-form-label>
               <nz-form-control>
-                <textarea
-                  nz-input
-                  placeholder="please enter url description"
-                  [nzAutosize]="{ minRows: 4, maxRows: 4 }"
-                ></textarea>
+                <textarea nz-input placeholder="please enter url description" [nzAutosize]="{ minRows: 4, maxRows: 4 }"></textarea>
               </nz-form-control>
             </nz-form-item>
           </div>
         </div>
       </form>
-      <div class="footer">
-        <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>Cancel</span></button>
-        <button type="button" (click)="close()" class="ant-btn ant-btn-primary"><span>Submit</span></button>
-      </div>
     </nz-drawer>
-  `,
-  styles: [
-    `
-      .footer {
-        position: absolute;
-        bottom: 0px;
-        width: 100%;
-        border-top: 1px solid rgb(232, 232, 232);
-        padding: 10px 16px;
-        text-align: right;
-        left: 0px;
-        background: #fff;
-      }
-    `
-  ]
+  `
 })
 export class NzDemoDrawerFromDrawerComponent {
   visible = false;

@@ -12,15 +12,11 @@ title: Checkbox
 - 在一组可选项中进行多项选择时；
 - 单独使用可以表示两种状态之间的切换，和 `switch` 类似。区别在于切换 `switch` 会直接触发状态改变，而 `checkbox` 一般用于状态标记，需要和提交操作配合。
 
-## API
-
-### 单独引入此组件
-
-想要了解更多关于单独引入组件的内容，可以在[快速上手](/docs/getting-started/zh#单独引入某个组件)页面进行查看。
-
 ```ts
-import { NzCheckboxModule } from 'ng-zorro-antd';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 ```
+
+## API
 
 ### [nz-checkbox]
 
@@ -30,7 +26,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd';
 | `[nzDisabled]` | 设定 disable 状态 | `boolean` | `false` |
 | `[ngModel]` | 指定当前是否选中，可双向绑定 | `boolean` | `false` |
 | `[nzIndeterminate]` | 设置 indeterminate 状态，只负责样式控制 | `boolean` | `false` |
-| `[nzValue]` | 仅与 `nz-checkbox-wrapper` 的选中回调配合使用 | `string` | - |
+| `[nzValue]` | 仅与 `nz-checkbox-wrapper` 的选中回调配合使用 | `any` | - |
 | `(ngModelChange)` | 选中变化时回调 | `EventEmitter<boolean>` | - |
 
 ### nz-checkbox-group
@@ -46,7 +42,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd';
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `(nzOnChange)` | 选中数据变化时的回调 | `EventEmitter<string[]>` | - |
+| `(nzOnChange)` | 选中数据变化时的回调 | `EventEmitter<any[]>` | - |
 
 ## 方法
 

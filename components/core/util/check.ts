@@ -1,14 +1,17 @@
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { TemplateRef, Type } from '@angular/core';
 
-import { IndexableObject } from '../types/indexable';
+import { IndexableObject, NzSafeAny } from 'ng-zorro-antd/core/types';
 
-// tslint:disable-next-line:no-any
-export function isNotNil(value: any): boolean {
+export function isNotNil<T>(value: T): value is NonNullable<T> {
   return typeof value !== 'undefined' && value !== null;
 }
 
-// tslint:disable-next-line:no-any
-export function isNil(value: any): value is null | undefined {
+export function isNil(value: unknown): value is null | undefined {
   return typeof value === 'undefined' || value === null;
 }
 
@@ -75,17 +78,14 @@ export function filterNotEmptyNode(node: Node): Node | null {
   return null;
 }
 
-// tslint:disable-next-line:no-any
-export function isNonEmptyString(value: any): boolean {
+export function isNonEmptyString(value: NzSafeAny): boolean {
   return typeof value === 'string' && value !== '';
 }
 
-// tslint:disable-next-line:no-any
-export function isTemplateRef(value: any): boolean {
+export function isTemplateRef(value: NzSafeAny): boolean {
   return value instanceof TemplateRef;
 }
 
-// tslint:disable-next-line:no-any
-export function isComponent(value: any): boolean {
+export function isComponent(value: NzSafeAny): boolean {
   return value instanceof Type;
 }

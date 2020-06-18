@@ -1,4 +1,9 @@
-import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
+import { animate, AnimationTriggerMetadata, style, transition, trigger } from '@angular/animations';
 import { AnimationCurves, AnimationDuration } from './animation-consts';
 
 export const zoomMotion: AnimationTriggerMetadata = trigger('zoomMotion', [

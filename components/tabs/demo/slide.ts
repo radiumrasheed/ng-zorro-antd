@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NzTabPosition } from 'ng-zorro-antd/tabs';
 
 @Component({
   selector: 'nz-demo-tabs-slide',
@@ -8,12 +9,7 @@ import { Component, OnInit } from '@angular/core';
       <label nz-radio-button [nzValue]="'left'">Vertical</label>
     </nz-radio-group>
     <nz-input-number style="float:right;" [nzMin]="0" [nzMax]="10" [(ngModel)]="selectedIndex"></nz-input-number>
-    <nz-tabset
-      style="height:220px;"
-      [nzTabPosition]="nzTabPosition"
-      [(nzSelectedIndex)]="selectedIndex"
-      (nzSelectChange)="log([$event])"
-    >
+    <nz-tabset style="height:220px;" [nzTabPosition]="nzTabPosition" [(nzSelectedIndex)]="selectedIndex" (nzSelectChange)="log([$event])">
       <nz-tab
         *ngFor="let tab of tabs"
         [nzTitle]="tab.name"
@@ -24,12 +20,11 @@ import { Component, OnInit } from '@angular/core';
         {{ tab.content }}
       </nz-tab>
     </nz-tabset>
-  `,
-  styles: []
+  `
 })
 export class NzDemoTabsSlideComponent implements OnInit {
-  tabs: any[] = [];
-  nzTabPosition = 'top';
+  tabs: Array<{ name: string; content: string }> = [];
+  nzTabPosition: NzTabPosition = 'top';
   selectedIndex = 0;
 
   /* tslint:disable-next-line:no-any */

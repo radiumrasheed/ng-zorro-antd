@@ -1,22 +1,21 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+
+export interface AutocompleteOptionGroups {
+  title: string;
+  count?: number;
+  children?: AutocompleteOptionGroups[];
+}
 
 @Component({
   selector: 'nz-demo-auto-complete-certain-category',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="example-input">
       <nz-input-group nzSize="large" [nzSuffix]="suffixIcon">
-        <input
-          placeholder="input here"
-          nz-input
-          [(ngModel)]="inputValue"
-          (ngModelChange)="onChange($event)"
-          [nzAutocomplete]="auto"
-        />
+        <input placeholder="input here" nz-input [(ngModel)]="inputValue" (ngModelChange)="onChange($event)" [nzAutocomplete]="auto" />
       </nz-input-group>
       <ng-template #suffixIcon>
-        <i nz-icon type="search"></i>
+        <i nz-icon nzType="search"></i>
       </ng-template>
       <nz-autocomplete #auto>
         <nz-auto-optgroup *ngFor="let group of optionGroups" [nzLabel]="groupTitle">
@@ -26,7 +25,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
               <a class="more-link" href="https://www.google.com/search?q=ng+zorro" target="_blank">更多</a>
             </span>
           </ng-template>
-          <nz-auto-option *ngFor="let option of group.children" [nzLabel]="option.title" [nzValue]="option">
+          <nz-auto-option *ngFor="let option of group.children" [nzLabel]="option.title" [nzValue]="option.title">
             {{ option.title }}
             <span class="certain-search-item-count">{{ option.count }} 人 关注</span>
           </nz-auto-option>
@@ -49,10 +48,12 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
   ]
 })
 export class NzDemoAutoCompleteCertainCategoryComponent implements OnInit {
-  inputValue: string;
-  optionGroups: any[];
+  inputValue?: string;
+  optionGroups: AutocompleteOptionGroups[] = [];
 
-  onChange(value: any): void {
+  constructor() {}
+
+  onChange(value: string): void {
     console.log(value);
   }
 

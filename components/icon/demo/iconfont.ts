@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NzIconService } from 'ng-zorro-antd';
+import { NzIconService } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'nz-demo-icon-iconfont',
@@ -20,8 +20,8 @@ import { NzIconService } from 'ng-zorro-antd';
   ]
 })
 export class NzDemoIconIconfontComponent {
-  constructor(private _iconService: NzIconService) {
-    this._iconService.fetchFromIconfont({
+  constructor(private iconService: NzIconService) {
+    this.iconService.fetchFromIconfont({
       scriptUrl: 'https://at.alicdn.com/t/font_8d5l8fzk5b87iudi.js'
     });
   }

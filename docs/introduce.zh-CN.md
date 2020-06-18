@@ -3,7 +3,7 @@ order: 0
 title: Ant Design of Angular
 ---
 
-这里是 Ant Design 的 Angular 实现，开发和服务于企业级后台产品。
+`ng-zorro-antd` 是 Ant Design 的 Angular 实现，主要用于研发企业级中后台产品。
 
 <div class="pic-plus">
   <img width="150" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
@@ -27,8 +27,11 @@ title: Ant Design of Angular
 ## 特性
 
 - 提炼自企业级中后台产品的交互语言和视觉风格。
-- 开箱即用的高质量 Angular 组件。
+- 开箱即用的高质量 Angular 组件，与 Angular 保持同步升级。
 - 使用 TypeScript 构建，提供完整的类型定义文件。
+- 支持 OnPush 模式，性能卓越。
+- 数十个国际化语言支持。
+- 深入每个细节的主题定制能力。
 
 ## 支持环境
 
@@ -36,13 +39,16 @@ title: Ant Design of Angular
 - 支持服务端渲染
 - [Electron](http://electron.atom.io/)
 
+| [<img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/62.2.25/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>IE / Edge | [<img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/62.2.25/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Firefox | [<img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/62.2.25/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Chrome | [<img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/62.2.25/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Safari | [<img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/62.2.25/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Opera | [<img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/62.2.25/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Electron |
+| --- | --- | --- | --- | --- | --- |
+| IE11, Edge | last 2 versions | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
+
 ## 当前版本
 
 [![npm package](https://img.shields.io/npm/v/ng-zorro-antd.svg?style=flat-square)](https://www.npmjs.org/package/ng-zorro-antd)
-
 ## 支持 Angular 版本
 
-目前支持 Angular `^7.0.0` 版本。
+`ng-zorro-antd` 与 `@angular/core` 保持相同的主版本号，目前支持 Angular `^9.0.0` 版本。
 
 ## 设计规范
 
@@ -73,24 +79,37 @@ $ ng add ng-zorro-antd
 
 - [阿里巴巴](http://www.alibaba.com/)
 - [阿里云](http://www.aliyun.com/)
+- [思特沃克](https://www.thoughtworks.com/)
+- [共道科技](https://www.gongdao.com/)
+- [优速快递](http://www.uce.cn/)
+- [轻流](https://qingflow.com/)
+- [航天信息股份有限公司](http://www.aisino.com/)
+- [达观数据](http://datagrand.com/)
+- [Ververica](https://www.ververica.com/)
+- [Apache Flink](https://flink.apache.org/)
+- [Apache Zeppelin](http://zeppelin.apache.org/)
+- [Process Automation Group](http://pag.company/)
+- [ScentBird](https://www.scentbird.com/)
+- [Southern Institute of Technology](https://www.sit.ac.nz/)
+- [Hapify (Dynamic boilerplates tool)](https://hub.hapify.io/)
 
-> 如果你的公司和产品使用了 NG-ZORRO，欢迎到 [这里](https://github.com/NG-ZORRO/ng-zorro-antd/issues/1142) 留言。
+> 这里列出了部分使用者，如果你的公司和产品使用了 NG-ZORRO，欢迎到 [这里](https://github.com/NG-ZORRO/ng-zorro-antd/issues/1142) 留言。
 
 ## 如何贡献
 
 在任何形式的参与前，请先阅读 [贡献者文档](https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/CONTRIBUTING.md)。如果你希望参与贡献，欢迎 [Pull Request](https://github.com/NG-ZORRO/ng-zorro-antd/pulls)，或给我们 [报告 Bug](http://ng.ant.design/issue-helper/#/en)。
 
-> 强烈推荐阅读 [《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way)(本指南不提供此项目的实际支持服务！)、[《如何向开源社区提问题》](https://github.com/seajs/seajs/issues/545) 和 [《如何有效地报告 Bug》](http://www.chiark.greenend.org.uk/%7Esgtatham/bugs-cn.html)、[《如何向开源项目提交无法解答的问题》](https://zhuanlan.zhihu.com/p/25795393)，更好的问题更容易获得帮助。
+> 强烈推荐阅读 [《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way)、[《如何向开源社区提问题》](https://github.com/seajs/seajs/issues/545) 和 [《如何有效地报告 Bug》](http://www.chiark.greenend.org.uk/%7Esgtatham/bugs-cn.html)、[《如何向开源项目提交无法解答的问题》](https://zhuanlan.zhihu.com/p/25795393)，更好的问题更容易获得帮助。
 
 ## 社区互助
 
 如果您在使用的过程中碰到问题，可以通过下面几个途径寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
 
-通过 Stack Overflow 或者 Segment Fault 提问时，建议加上 `ng-zorro` 标签。
+通过 Stack Overflow 或者 Segment Fault 提问时，建议加上 `ng-zorro-antd` 标签。
 
-1. [<img alt="Stack Overflow" src="https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-logo.svg?v=2bb144720a66" width="140" />](https://stackoverflow.com/questions/tagged/ng-zorro)（English）
-2. [<img alt="Segment Fault" src="https://gw.alipayobjects.com/zos/rmsportal/hfYFfCvHTQTUKntlJbMF.svg" width="100" />](https://segmentfault.com/t/ng-zorro)（中文）
+1. [Stack Overflow](https://stackoverflow.com/questions/tagged/ng-zorro-antd)（English）
+2. [Segment Fault](https://segmentfault.com/t/ng-zorro)（中文）
 3. [![Gitter](https://img.shields.io/gitter/room/ng-zorro/ng-zorro-antd.svg?style=flat-square)](https://gitter.im/ng-zorro/ng-zorro-antd)
 4. 加入钉钉 NG-ZORRO 自助服务群（中文）
 
-<img src="https://img.alicdn.com/tfs/TB1aYpsHAvoK1RjSZPfXXXPKFXa-750-990.jpg" width="300">
+<img src="https://img.alicdn.com/tfs/TB1oRkkzy_1gK0jSZFqXXcpaXXa-750-990.jpg" width="300" loading="lazy" alt="ding talk qr-code">

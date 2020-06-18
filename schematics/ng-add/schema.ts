@@ -17,6 +17,7 @@ export type Locale =
   | 'is_IS'
   | 'it_IT'
   | 'ja_JP'
+  | 'ka_GE'
   | 'ko_KR'
   | 'nb_NO'
   | 'nl_BE'
@@ -35,8 +36,14 @@ export type Locale =
   | 'zh_CN'
   | 'zh_TW';
 
+export enum ProjectTemplate {
+  Blank    = 'blank',
+  Sidemenu = 'sidemenu',
+  Topnav   = 'topnav',
+  None     = 'none'
+}
+
 export interface Schema {
-  bootPage?: boolean;
   /** Name of the project to target. */
   project?: string;
   /** Whether to skip package.json install. */
@@ -47,4 +54,5 @@ export interface Schema {
   animations?: boolean;
   locale?: Locale;
   i18n?: Locale;
+  template?: ProjectTemplate;
 }

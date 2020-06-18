@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import differenceInCalendarDays from 'date-fns/difference_in_calendar_days';
-import setHours from 'date-fns/set_hours';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import setHours from 'date-fns/setHours';
+import { DisabledTimeFn, DisabledTimePartial } from 'ng-zorro-antd/date-picker';
 
 @Component({
   selector: 'nz-demo-date-picker-disabled-date',
@@ -15,7 +16,7 @@ import setHours from 'date-fns/set_hours';
     <br />
     <nz-month-picker [nzDisabledDate]="disabledDate" nzPlaceHolder="Select month"></nz-month-picker>
     <br />
-    <nz-year-picker [nzDisabledDate]="disabledDate"></nz-year-picker>
+    <nz-year-picker [nzDisabledDate]="disabledDate" nzPlaceHolder="Select year"></nz-year-picker>
     <br />
     <nz-range-picker
       [nzDisabledDate]="disabledDate"
@@ -53,7 +54,7 @@ export class NzDemoDatePickerDisabledDateComponent {
     return differenceInCalendarDays(current, this.today) > 0;
   };
 
-  disabledDateTime = (): object => {
+  disabledDateTime: DisabledTimeFn = () => {
     return {
       nzDisabledHours: () => this.range(0, 24).splice(4, 20),
       nzDisabledMinutes: () => this.range(30, 60),
@@ -61,7 +62,7 @@ export class NzDemoDatePickerDisabledDateComponent {
     };
   };
 
-  disabledRangeTime = (_value: Date[], type: 'start' | 'end'): object => {
+  disabledRangeTime: DisabledTimeFn = (_value, type?: DisabledTimePartial) => {
     if (type === 'start') {
       return {
         nzDisabledHours: () => this.range(0, 60).splice(4, 20),

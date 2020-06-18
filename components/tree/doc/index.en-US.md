@@ -8,38 +8,42 @@ title: Tree
 
 Almost anything can be represented in a tree structure. Examples include directories, organization hierarchies, biological classifications, countries, etc. The `Tree` component is a way of representing the hierarchical relationship between these things. You can also  expand, collapse, and select a treeNode within a `Tree`.
 
-## API
-
-### Import this Component Individually
-
-You can get more detail [here](/docs/getting-started/en#import-a-component-individually).
-
 ```ts
-import { NzTreeModule } from 'ng-zorro-antd';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
 ```
+
+## API
 
 ### nz-tree
 
-| Property | Description | Type | Default |
-| -------- | ----------- | ---- | ------- |
-| `[nzData]` | Tree data (Reference NzTreeNode) | `NzTreeNodeOptions[]｜NzTreeNode[]` | `[]` |
-| `[nzBlockNode]` | Whether treeNode fill remaining horizontal space | `boolean` | `false` |
+> Tips: According to the current data structure design, you need to ensure that `nzData` is set first, otherwise other attributes will not take effect. After the asynchronous operation returns data, re-assign other attributes to trigger rendering(including `nzExpandAll` `nzExpandedKeys` `nzCheckedKeys` `nzSelectedKeys` `nzSearchValue`). Please refer to [#5152](https://github.com/NG-ZORRO/ng-zorro-antd/issues/5152) to track the optimization progress.
+
+| Property | Description | Type | Default | Global Config |
+| -------- | ----------- | ---- | ------- | ------------- |
+| `[nzData]` | Tree data (Reference NzTreeNode) | `NzTreeNodeOptions[] \| NzTreeNode[]` | `[]` |
+| `[nzBlockNode]` | Whether treeNode fill remaining horizontal space | `boolean` | `false` | ✅ |
 | `[nzCheckable]` | Adds a Checkbox before the treeNodes| `boolean` | `false` |
-| `[nzShowExpand]` | Show a Expand Icon before the treeNodes | `boolean` | `true` |
-| `[nzShowLine]` | Shows a connecting line | `boolean` | `false` |
+| `[nzShowExpand]` | Show a Expand Icon before the treeNodes | `boolean` | `true` | |
+| `[nzShowLine]` | Shows a connecting line | `boolean` | `false` | |
 | `[nzExpandedIcon]` | Customize an expand icon | `TemplateRef<{ $implicit: NzTreeNode }>` | - |
-| `[nzShowIcon]` | Shows the icon before a TreeNode's title. There is no default style | `boolean` | `false` |
+| `[nzShowIcon]` | Shows the icon before a TreeNode's title. There is no default style | `boolean` | `false` | ✅ |
 | `[nzAsyncData]` | Load data asynchronously (should be used with NzTreeNode.addChildren(...)) | `boolean` | `false` |
 | `[nzDraggable]` | Specifies whether this Tree is draggable (IE > 8) | `boolean` | `false` |
 | `[nzMultiple]` | Allows selecting multiple treeNodes | `boolean` | `false` |
-| `[nzHideUnMatched]` | Hide unmatched nodes while searching | `boolean` | `false` |
+| `[nzHideUnMatched]` | Hide unmatched nodes while searching | `boolean` | `false` | ✅ |
 | `[nzCheckStrictly]` | Check treeNode precisely; parent treeNode and children treeNodes are not associated | `boolean` | `false` |
+| `[nzTreeTemplate]` | Custom Nodes | `TemplateRef<{ $implicit: NzTreeNode }>` | - |
 | `[nzExpandAll]` | Whether to expand all treeNodes | `boolean` | `false` |
 | `[nzExpandedKeys]` | Specify the keys of the default expanded treeNodes | `string[]` | `[]` |
 | `[nzCheckedKeys]` | Specifies the keys of the default checked treeNodes | `string[]` | `[]` |
 | `[nzSelectedKeys]` | Specifies the keys of the default selected treeNodes | `string[]` | `[]` |
 | `[nzSearchValue]` | Filter (highlight) treeNodes (see demo `Searchable`), two-way binding | `string` | `null` |
+| `[nzSearchFunc]` | Custom matching method, used with nzSearchValue | `(node: NzTreeNodeOptions) => boolean` | `null` |
 | `[nzBeforeDrop]` | Drop before the second check, allowing the user to decide whether to allow placement | `(confirm: NzFormatBeforeDropEvent) => Observable<boolean>` | - |
+| `[nzVirtualHeight]` | The height of virtual scroll | `string` | `-` |
+| `[nzVirtualItemSize]` | The size of the items in the list, same as [cdk itemSize](https://material.angular.io/cdk/scrolling/api) | `number` | `0` |
+| `[nzVirtualMaxBufferPx]` | The number of pixels worth of buffer to render for when rendering new items, same as [cdk maxBufferPx](https://material.angular.io/cdk/scrolling/api) | `number` | `200` |
+| `[nzVirtualMinBufferPx]` | The minimum amount of buffer rendered beyond the viewport (in pixels),same as [cdk minBufferPx](https://material.angular.io/cdk/scrolling/api) | `number` | `100` |
 | `(nzClick)` | Callback function for when the user clicks a treeNode | `EventEmitter<NzFormatEmitEvent>` | - |
 | `(nzDblClick)` | Callback function for when the user double clicks a treeNode | `EventEmitter<NzFormatEmitEvent>` | - |
 | `(nzContextMenu)` | Callback function for when the user right clicks a treeNode | `EventEmitter<NzFormatEmitEvent>` | - |
@@ -88,7 +92,7 @@ import { NzTreeModule } from 'ng-zorro-antd';
 | --- | --- | --- | --- |
 | eventName | Event Name | enum: `click` `dblclick` `contextmenu` `check` `expand` `search` & `dragstart` `dragenter` `dragover` `dragleave` `drop` `dragend` | - |
 | node | The current operation node (such as the target node to drop while dragging) | `NzTreeNode` | `null` |
-| event | MouseEvent or DragEvent | `'MouseEvent'｜'DragEvent'` | `null` |
+| event | MouseEvent or DragEvent | `'MouseEvent' \| 'DragEvent'` | `null` |
 | dragNode? | Current drag node (existing if dragged) | `NzTreeNode` | `null` |
 | selectedKeys? | Selected nodes list | `NzTreeNode[]` | `[]` |
 | checkedKeys? | Checked nodes list | `NzTreeNode[]` | `[]` |
@@ -131,6 +135,18 @@ import { NzTreeModule } from 'ng-zorro-antd';
 | remove | Clear current node(not root node) | function | - |
 
 ## Note
+* Please make sure `nzData` is set before the above mentioned properties:
+```typescript
+// Demo
+this.nzExpandAll = false;
+const nodes = []; // source data
+this.nzData = [...nodes];
+// Reset the above mentioned properties if you have used after setting of nzData
+this.nzExpandedKeys = [...this.nzExpandedKeys];
+// this.nzExpandAll = true;
+this.nzCheckedKeys = [...this.nzCheckedKeys];
+this.nzSelectedKeys = [...this.nzSelectedKeys];
+```
 * `NzTreeNodeOptions` accepts your customized properties，use NzTreeNode.origin to get them.
 * If Tree Methods used with ViewChild, should be used in ngAfterViewInit.
 * Setting NzData with NzTreeNodeOptions[] is better，if you set nzData with NzTreeNode[], it will be deprecated in next major version(8.x).

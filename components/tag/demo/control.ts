@@ -3,16 +3,10 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 @Component({
   selector: 'nz-demo-tag-control',
   template: `
-    <nz-tag
-      *ngFor="let tag of tags; let i = index"
-      [nzMode]="i === 0 ? 'default' : 'closeable'"
-      (nzAfterClose)="handleClose(tag)"
-    >
+    <nz-tag *ngFor="let tag of tags; let i = index" [nzMode]="i === 0 ? 'default' : 'closeable'" (nzAfterClose)="handleClose(tag)">
       {{ sliceTagName(tag) }}
     </nz-tag>
-    <nz-tag *ngIf="!inputVisible" class="editable-tag" nzNoAnimation (click)="showInput()">
-      <i nz-icon type="plus"></i> New Tag
-    </nz-tag>
+    <nz-tag *ngIf="!inputVisible" class="editable-tag" nzNoAnimation (click)="showInput()"> <i nz-icon nzType="plus"></i> New Tag </nz-tag>
     <input
       #inputElement
       nz-input
@@ -38,7 +32,7 @@ export class NzDemoTagControlComponent {
   tags = ['Unremovable', 'Tag 2', 'Tag 3'];
   inputVisible = false;
   inputValue = '';
-  @ViewChild('inputElement') inputElement: ElementRef;
+  @ViewChild('inputElement', { static: false }) inputElement?: ElementRef;
 
   handleClose(removedTag: {}): void {
     this.tags = this.tags.filter(tag => tag !== removedTag);
@@ -52,7 +46,7 @@ export class NzDemoTagControlComponent {
   showInput(): void {
     this.inputVisible = true;
     setTimeout(() => {
-      this.inputElement.nativeElement.focus();
+      this.inputElement?.nativeElement.focus();
     }, 10);
   }
 

@@ -4,12 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'nz-demo-form-layout',
   template: `
-    <form
-      nz-form
-      [nzLayout]="validateForm.get('formLayout')?.value"
-      [formGroup]="validateForm"
-      (ngSubmit)="submitForm()"
-    >
+    <form nz-form [nzLayout]="validateForm.get('formLayout')?.value" [formGroup]="validateForm" (ngSubmit)="submitForm()">
       <nz-form-item>
         <nz-form-label [nzSpan]="isHorizontal ? 4 : null">Form Layout</nz-form-label>
         <nz-form-control [nzSpan]="isHorizontal ? 14 : null">
@@ -22,20 +17,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="isHorizontal ? 4 : null">Field A</nz-form-label>
-        <nz-form-control [nzSpan]="isHorizontal ? 14 : null">
+        <nz-form-control [nzSpan]="isHorizontal ? 14 : null" nzErrorTip="Please input your username!">
           <input nz-input formControlName="fieldA" placeholder="input placeholder" />
-          <nz-form-explain *ngIf="validateForm.get('fieldA')?.dirty && validateForm.get('fieldA')?.errors"
-            >Please input your username!</nz-form-explain
-          >
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="isHorizontal ? 4 : null">Field B</nz-form-label>
-        <nz-form-control [nzSpan]="isHorizontal ? 14 : null">
+        <nz-form-control [nzSpan]="isHorizontal ? 14 : null" nzErrorTip="Please input your Password!">
           <input nz-input formControlName="filedB" placeholder="input placeholder" />
-          <nz-form-explain *ngIf="validateForm.get('filedB')?.dirty && validateForm.get('filedB')?.errors"
-            >Please input your Password!</nz-form-explain
-          >
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
@@ -54,7 +43,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   ]
 })
 export class NzDemoFormLayoutComponent implements OnInit {
-  validateForm: FormGroup;
+  validateForm!: FormGroup;
 
   submitForm(): void {
     for (const i in this.validateForm.controls) {
@@ -64,7 +53,7 @@ export class NzDemoFormLayoutComponent implements OnInit {
   }
 
   get isHorizontal(): boolean {
-    return this.validateForm.controls.formLayout && this.validateForm.controls.formLayout.value === 'horizontal';
+    return this.validateForm.controls.formLayout?.value === 'horizontal';
   }
 
   constructor(private fb: FormBuilder) {}

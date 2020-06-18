@@ -6,44 +6,41 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   template: `
     <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
       <nz-form-item>
-        <nz-form-control>
-          <nz-input-group [nzPrefix]="prefixUser">
+        <nz-form-control nzErrorTip="Please input your username!">
+          <nz-input-group nzPrefixIcon="user">
             <input type="text" nz-input formControlName="userName" placeholder="Username" />
           </nz-input-group>
-          <nz-form-explain *ngIf="validateForm.get('userName')?.dirty && validateForm.get('userName')?.errors"
-            >Please input your username!</nz-form-explain
-          >
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-control>
-          <nz-input-group [nzPrefix]="prefixLock">
+        <nz-form-control nzErrorTip="Please input your Password!">
+          <nz-input-group nzPrefixIcon="lock">
             <input type="password" nz-input formControlName="password" placeholder="Password" />
           </nz-input-group>
-          <nz-form-explain *ngIf="validateForm.get('password')?.dirty && validateForm.get('password')?.errors"
-            >Please input your Password!</nz-form-explain
-          >
         </nz-form-control>
       </nz-form-item>
-      <nz-form-item>
-        <nz-form-control>
+      <div nz-row class="login-form-margin">
+        <div nz-col [nzSpan]="12">
           <label nz-checkbox formControlName="remember">
             <span>Remember me</span>
           </label>
-          <a class="login-form-forgot" class="login-form-forgot">Forgot password</a>
-          <button nz-button class="login-form-button" [nzType]="'primary'">Log in</button>
-          Or
-          <a href="">register now!</a>
-        </nz-form-control>
-      </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <a class="login-form-forgot">Forgot password</a>
+        </div>
+      </div>
+      <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">Log in</button>
+      Or <a> register now! </a>
     </form>
-    <ng-template #prefixUser><i nz-icon type="user"></i></ng-template>
-    <ng-template #prefixLock><i nz-icon type="lock"></i></ng-template>
   `,
   styles: [
     `
       .login-form {
         max-width: 300px;
+      }
+
+      .login-form-margin {
+        margin-bottom: 16px;
       }
 
       .login-form-forgot {
@@ -57,7 +54,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   ]
 })
 export class NzDemoFormNormalLoginComponent implements OnInit {
-  validateForm: FormGroup;
+  validateForm!: FormGroup;
 
   submitForm(): void {
     for (const i in this.validateForm.controls) {

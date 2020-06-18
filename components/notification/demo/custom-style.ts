@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { NzNotificationService } from 'ng-zorro-antd';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'nz-demo-notification-custom-style',
   template: `
     <button nz-button [nzType]="'primary'" (click)="createBasicNotification()">Open the notification box</button>
-  `,
-  styles: []
+  `
 })
 export class NzDemoNotificationCustomStyleComponent {
   constructor(private notification: NzNotificationService) {}

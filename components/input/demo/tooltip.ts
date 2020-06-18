@@ -4,18 +4,20 @@ import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/co
   selector: 'nz-demo-input-tooltip',
   encapsulation: ViewEncapsulation.None,
   template: `
-    <nz-tooltip nzTrigger="focus" nzPlacement="topLeft" nzOverlayClassName="numeric-input" [nzTitle]="title">
-      <input
-        #inputElement
-        style="width: 120px"
-        nz-input
-        nz-tooltip
-        placeholder="Input a number"
-        [ngModel]="value"
-        (ngModelChange)="onChange($event)"
-        (blur)="onBlur()"
-      />
-    </nz-tooltip>
+    <input
+      #inputElement
+      style="width: 120px"
+      nz-input
+      nz-tooltip
+      nzTooltipTrigger="focus"
+      nzTooltipPlacement="topLeft"
+      nzOverlayClassName="numeric-input"
+      [ngModel]="value"
+      [nzTooltipTitle]="title"
+      placeholder="Input a number"
+      (ngModelChange)="onChange($event)"
+      (blur)="onBlur()"
+    />
   `,
   styles: [
     `
@@ -34,7 +36,7 @@ export class NzDemoInputTooltipComponent {
   value = '';
   title = 'Input a number';
 
-  @ViewChild('inputElement') inputElement: ElementRef;
+  @ViewChild('inputElement', { static: false }) inputElement?: ElementRef;
 
   onChange(value: string): void {
     this.updateValue(value);
@@ -52,7 +54,7 @@ export class NzDemoInputTooltipComponent {
     if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
       this.value = value;
     }
-    this.inputElement.nativeElement.value = this.value;
+    this.inputElement!.nativeElement.value = this.value;
     this.updateTitle();
   }
 
@@ -61,8 +63,8 @@ export class NzDemoInputTooltipComponent {
   }
 
   formatNumber(value: string): string {
-    const string = `${value}`;
-    const list = string.split('.');
+    const stringValue = `${value}`;
+    const list = stringValue.split('.');
     const prefix = list[0].charAt(0) === '-' ? '-' : '';
     let num = prefix ? list[0].slice(1) : list[0];
     let result = '';

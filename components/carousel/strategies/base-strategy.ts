@@ -1,18 +1,23 @@
+/**
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { ChangeDetectorRef, QueryList, Renderer2 } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { NzCarouselContentDirective } from '../nz-carousel-content.directive';
-import { FromToInterface, NzCarouselComponentAsSource, PointerVector } from '../nz-carousel-definitions';
+import { NzCarouselContentDirective } from '../carousel-content.directive';
+import { FromToInterface, NzCarouselComponentAsSource, PointerVector } from '../typings';
 
 export abstract class NzCarouselBaseStrategy {
   // Properties that strategies may want to use.
   protected carouselComponent: NzCarouselComponentAsSource | null;
-  protected contents: NzCarouselContentDirective[];
-  protected slickListEl: HTMLElement;
-  protected slickTrackEl: HTMLElement;
-  protected length: number;
-  protected unitWidth: number;
-  protected unitHeight: number;
+  protected contents!: NzCarouselContentDirective[];
+  protected slickListEl!: HTMLElement;
+  protected slickTrackEl!: HTMLElement;
+  protected length!: number;
+  protected unitWidth!: number;
+  protected unitHeight!: number;
 
   protected get maxIndex(): number {
     return this.length - 1;
@@ -26,11 +31,7 @@ export abstract class NzCarouselBaseStrategy {
     return this.contents[this.maxIndex].el;
   }
 
-  constructor(
-    carouselComponent: NzCarouselComponentAsSource,
-    protected cdr: ChangeDetectorRef,
-    protected renderer: Renderer2
-  ) {
+  constructor(carouselComponent: NzCarouselComponentAsSource, protected cdr: ChangeDetectorRef, protected renderer: Renderer2) {
     this.carouselComponent = carouselComponent;
   }
 

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NzFormatEmitEvent } from 'ng-zorro-antd';
+import { Component } from '@angular/core';
+import { NzFormatEmitEvent } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'nz-demo-tree-search',
@@ -8,7 +8,7 @@ import { NzFormatEmitEvent } from 'ng-zorro-antd';
       <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
     </nz-input-group>
     <ng-template #suffixIcon>
-      <i nz-icon type="search"></i>
+      <i nz-icon nzType="search"></i>
     </ng-template>
     <nz-tree
       [nzData]="nodes"
@@ -22,12 +22,12 @@ import { NzFormatEmitEvent } from 'ng-zorro-antd';
   styles: [
     `
       nz-input-group {
-        padding: 10px 0;
+        margin-bottom: 12px;
       }
     `
   ]
 })
-export class NzDemoTreeSearchComponent implements OnInit {
+export class NzDemoTreeSearchComponent {
   searchValue = '';
 
   nodes = [
@@ -79,6 +79,4 @@ export class NzDemoTreeSearchComponent implements OnInit {
   nzEvent(event: NzFormatEmitEvent): void {
     console.log(event);
   }
-
-  ngOnInit(): void {}
 }

@@ -2,10 +2,10 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { NzIconTestModule } from '../icon/nz-icon-test.module';
+import { NzIconTestModule } from 'ng-zorro-antd/icon/testing';
 
-import { NzDividerComponent } from './nz-divider.component';
-import { NzDividerModule } from './nz-divider.module';
+import { NzDividerComponent } from './divider.component';
+import { NzDividerModule } from './divider.module';
 
 describe('divider', () => {
   let fixture: ComponentFixture<TestDividerComponent>;
@@ -43,7 +43,10 @@ describe('divider', () => {
   });
 
   describe('#nzText', () => {
-    for (const item of [{ text: 'with text', ret: true }, { text: undefined, ret: false }]) {
+    for (const item of [
+      { text: 'with text', ret: true },
+      { text: undefined, ret: false }
+    ]) {
       it(`[${item.text}]`, () => {
         context.nzText = item.text;
         fixture.detectChanges();
@@ -60,7 +63,7 @@ describe('divider', () => {
   });
 
   describe('#nzOrientation', () => {
-    ['left', 'right'].forEach(type => {
+    ['center', 'left', 'right'].forEach(type => {
       it(`with ${type}`, () => {
         context.nzOrientation = type;
         fixture.detectChanges();
@@ -71,18 +74,10 @@ describe('divider', () => {
 });
 
 @Component({
-  template: `
-    <nz-divider
-      #comp
-      [nzDashed]="nzDashed"
-      [nzType]="nzType"
-      [nzText]="nzText"
-      [nzOrientation]="nzOrientation"
-    ></nz-divider>
-  `
+  template: ` <nz-divider #comp [nzDashed]="nzDashed" [nzType]="nzType" [nzText]="nzText" [nzOrientation]="nzOrientation"></nz-divider> `
 })
 class TestDividerComponent {
-  @ViewChild('comp') comp: NzDividerComponent;
+  @ViewChild('comp', { static: false }) comp!: NzDividerComponent;
   nzDashed = false;
   nzType = 'horizontal';
   nzText?: string = 'with text';
@@ -92,7 +87,7 @@ class TestDividerComponent {
 @Component({
   template: `
     <nz-divider nzDashed [nzText]="text">
-      <ng-template #text><i nz-icon type="plus"></i> Add</ng-template>
+      <ng-template #text><i nz-icon nzType="plus"></i> Add</ng-template>
     </nz-divider>
   `
 })

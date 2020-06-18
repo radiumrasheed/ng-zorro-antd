@@ -22,6 +22,10 @@
   position: absolute;
   pointer-events: auto;
   z-index: 1000;
+
+  &.ant-modal-mask {
+    opacity: 1;
+  }
 }
 
 .cdk-overlay-pane {
@@ -63,15 +67,6 @@
   &, &.cdk-overlay-backdrop-showing {
     opacity: 0;
   }
-}
-
-textarea.cdk-textarea-autosize-measuring {
-  height: auto !important;
-  overflow: hidden !important;
-  // Having 2px top and bottom padding seems to fix a bug where Chrome gets an incorrect
-  // measurement. We just have to account for it later and subtract it off the final result.
-  padding: 2px 0 !important;
-  box-sizing: content-box !important;
 }
 
 .nz-animate-disabled {

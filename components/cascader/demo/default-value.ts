@@ -1,5 +1,5 @@
-// tslint:disable:no-any
 import { Component } from '@angular/core';
+import { NzCascaderOption } from 'ng-zorro-antd/cascader';
 
 const options = [
   {
@@ -47,19 +47,12 @@ const options = [
   selector: 'nz-demo-cascader-default-value',
   template: `
     <nz-cascader [nzOptions]="nzOptions" [(ngModel)]="values" (ngModelChange)="onChanges($event)"> </nz-cascader>
-  `,
-  styles: [
-    `
-      .ant-cascader-picker {
-        width: 300px;
-      }
-    `
-  ]
+  `
 })
 export class NzDemoCascaderDefaultValueComponent {
-  nzOptions = options;
+  nzOptions: NzCascaderOption[] = options;
 
-  values: any[] = ['zhejiang', 'hangzhou', 'xihu'];
+  values: string[] = ['zhejiang', 'hangzhou', 'xihu'];
   /* // or like this:
   values: any[] = [{
     value: 'zhejiang',
@@ -72,7 +65,7 @@ export class NzDemoCascaderDefaultValueComponent {
     label: 'West Lake'
   }]; */
 
-  onChanges(values: any): void {
+  onChanges(values: string[]): void {
     console.log(values, this.values);
   }
 }
